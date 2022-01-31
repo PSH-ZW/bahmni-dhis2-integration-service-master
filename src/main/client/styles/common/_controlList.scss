@@ -1,0 +1,32 @@
+.control-list {
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid $white;
+  &:hover,&:active {
+    background: $gray300;
+    border: 1px solid $gray400;
+  }
+}
+.obs-control-wrap{
+  padding: 10px;
+  label{
+    width:auto;
+    display: inline-block;
+    text-transform: capitalize;
+    margin: 0.2em 0.8em 0.3em 0;
+    line-height: 1;
+    vertical-align: top;
+  }
+  .form-properties{
+    margin:10px 0 0;
+    div{
+      margin-bottom: 7px;
+    }
+  }
+  .obs-control-select-wrapper {
+    margin-bottom: 10px;
+  }
+  .control-id {
+    float: right;
+  }
+}

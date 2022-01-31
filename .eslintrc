@@ -1,0 +1,47 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["airbnb", "eslint:recommended", "plugin:react/recommended"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "webpack.config.js"
+      }
+    }
+  },
+  "rules": {
+    "arrow-body-style": 0,
+    "arrow-parens": 0,
+    "dot-notation": 0,
+    "global-require": 0,
+    "one-var": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/prefer-default-export": 0,
+    "no-underscore-dangle": 0,
+    "no-unused-expressions": 0,
+    "no-unused-vars": ["error", { "argsIgnorePattern": "[iI]gnored" }],
+    "no-plusplus": 0,
+    "no-shadow": 0,
+    "no-else-return": 0,
+    "no-use-before-define": ["error", { "functions": false }],
+    "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"],
+    "brace-style": 1,
+    "class-methods-use-this": 0,
+    "react/destructuring-assignment": [false],
+    "react/forbid-prop-types": 0,
+    "react/jsx-filename-extension": 0,
+    "react/no-did-mount-set-state": 0,
+    "react/no-string-refs" : [false],
+    "react/prop-types": 0,
+    "react/no-danger": 0,
+    "comma-dangle": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "import/no-dynamic-require": 0,
+    "import/no-unresolved": ["error", { "caseSensitive": false }],
+    "no-param-reassign": ["error", { "props": false }],
+  }
+}

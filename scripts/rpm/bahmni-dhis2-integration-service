@@ -1,0 +1,120 @@
+#!/bin/bash
+#
+# bahmni-dhis2-integration-service        start/stop/status script
+#
+# chkconfig: - 64 36
+# description: bahmni-dhis2-integration-service - Integration of bahmni and DHIS
+# processname: bahmni-dhis2-integration-service
+# pidfile: /var/run/bahmni-dhis2-integration-service.pid
+### BEGIN INIT INFO
+# Provides: bahmni-dhis2-integration-service
+# Required-Start: $local_fs $remote_fs $network $named $syslog $time
+# Required-Stop: $local_fs $remote_fs $network $named $syslog $time
+# Short-Description: start and stop bahmni-dhis2-integration-service system,
+# Description: bahmni-dhis2-integration-service system
+### END INIT INFO
+
+export BAHMNI_DHIS_USER=bahmni
+export BAHMNI_DHIS_RUN=/opt/bahmni-dhis2-integration-service/bin/start.sh
+export BAHMNI_DHIS_DEBUG=/opt/bahmni-dhis2-integration-service/bin/debug.sh
+export CUR_USER=`/usr/bin/whoami`
+
+
+. /etc/bahmni-dhis2-integration-service/bahmni-dhis.conf
+
+create_dirs() {
+    if [[ ! -e /var/log/bahmni-dhis2-integration-service ]]; then
+        ln -s /opt/bahmni-dhis2-integration-service/log /var/log/bahmni-dhis2-integration-service
+    fi
+}
+
+bahmni_dhis_pid() {
+        echo `ps -fe | grep 'bahmni-dhis2-integration-service-1.1.0.jar' | grep -v grep | tr -s " "|cut -d" " -f2`
+}
+
+start(){
+    pid=$(bahmni_dhis_pid)
+    if [ -n "$pid" ]
+    then
+        echo -e "\e[00;31mService bahmni-dhis2-integration-service is already running (pid: $pid)\e[00m"
+    else
+        # Start bahmni-dhis2-integration-service
+        create_dirs
+        echo -e "\e[00;32mStarting bahmni-dhis2-integration-service\e[00m"
+        if [ `user_exists $BAHMNI_DHIS_USER` = "1" ]  && [ "$CUR_USER" != "$BAHMNI_DHIS_USER" ] ;
+        then
+                su -s /bin/bash $BAHMNI_DHIS_USER $BAHMNI_DHIS_RUN
+        else
+                sh $BAHMNI_DHIS_RUN
+        fi
+  fi
+  exit 0
+}
+
+debug(){
+    pid=$(bahmni_dhis_pid)
+    if [ -n "$pid" ]
+    then
+        echo -e "\e[00;31mService bahmni-dhis2-integration-service is already running (pid: $pid)\e[00m"
+    else
+        # Start bahmni-dhis2-integration-service
+        create_dirs
+        echo -e "\e[00;32mStarting bahmni-dhis2-integration-service\e[00m"
+        if [ `user_exists $BAHMNI_DHIS_USER` = "1" ]  && [ "$CUR_USER" != "$BAHMNI_DHIS_USER" ] ;
+        then
+                su -s /bin/bash $BAHMNI_DHIS_USER $BAHMNI_DHIS_DEBUG
+        else
+                sh $BAHMNI_DHIS_DEBUG
+        fi
+  fi
+  exit 0
+}
+
+status(){
+          pid=$(bahmni_dhis_pid)
+          if [ -n "$pid" ]; then echo -e "\e[00;32mService bahmni-dhis2-integration-service is running with pid: $pid\e[00m"
+          else echo -e "\e[00;31mService bahmni-dhis2-integration-service is not running\e[00m"
+          exit 3
+          fi
+}
+
+stop() {
+	echo -e "\e[00;31mTerminating bahmni-dhis2-integration-service\e[00m"
+	kill -9 $(bahmni_dhis_pid)
+	rm -rf /var/run/bahmni-dhis2-integration-service/bahmni-dhis2-integration-service.pid
+	return
+}
+
+user_exists(){
+        if id -u $1 >/dev/null 2>&1; then
+        echo "1"
+        else
+                echo "0"
+        fi
+}
+
+case $1 in
+	start)
+	  start
+	;;
+    debug)
+	  debug
+	;;
+	stop)
+	  stop
+	;;
+	restart)
+	  stop
+	  start
+	;;
+	status)
+		status
+	;;
+	kill)
+		stop
+	;;
+	*)
+
+	;;
+esac
+exit 0

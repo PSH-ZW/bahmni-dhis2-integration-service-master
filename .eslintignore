@@ -1,0 +1,10 @@
+**/*.scss
+**/*.json
+**/*.svg
+**/*.dsl
+node/**
+node_modules/**
+src/main/java/**
+src/test/java/**
+src/main/resources/static/**
+target/**

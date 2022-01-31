@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+<changeSet id="20180823-01" author="Yash">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) FROM role WHERE role = 'DHIS_Sync';
+            </sqlCheck>
+        </preConditions>
+        <comment>Creating new role for DHIS_Sync</comment>
+        <sql>
+            INSERT INTO role(role, description, uuid) VALUES('DHIS_Sync', "Role for DHIS Sync", uuid());;
+        </sql>
+</changeSet>   
+
+<changeSet id="20180823-02" author="Yash">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(*) from privilege where privilege IN (
+	             'app:dhis2sync',
+	             'app:dhis2sync:mapping',
+	             'app:dhis2sync:log',
+	             'app:dhis2sync:upload'
+             );
+            </sqlCheck>
+        </preConditions>
+        <comment>Adding privileges required for DHIS Sync</comment>
+        <sql>
+            INSERT INTO privilege(privilege, description, uuid) VALUES ('app:dhis2sync', 'Bahmni DHIS2 Integration App access privilege', uuid());
+            INSERT INTO privilege(privilege, description, uuid) VALUES ('app:dhis2sync:mapping', 'Manage Mappings in Bahmni-DHIS2 Integration App', uuid());
+            INSERT INTO privilege(privilege, description, uuid) VALUES ('app:dhis2sync:log', 'View Logs in Bahmni-DHIS2 Integration App', uuid());
+            INSERT INTO privilege(privilege, description, uuid) VALUES ('app:dhis2sync:upload', 'Sync data from Bahmni to DHIS2 in Bahmni-DHIS2 Integration App', uuid());
+        </sql>
+</changeSet>
+
+<changeSet id="20180823-03" author="Yash">
+     <preConditions onFail="MARK_RAN">
+           <sqlCheck expectedResult="0">
+             select count(*) from role_privilege where role='DHIS_Sync' and privilege in 
+             (
+	             'app:dhis2sync',
+	             'app:dhis2sync:mapping',
+	             'app:dhis2sync:log',
+	             'app:dhis2sync:upload'
+             );
+           </sqlCheck>
+    </preConditions>
+<comment> Providing DHIS related access for the DHIS_Sync role </comment>
+<sql>
+            insert into role_privilege values('DHIS_Sync','app:dhis2sync');
+            insert into role_privilege values('DHIS_Sync','app:dhis2sync:mapping');
+            insert into role_privilege values('DHIS_Sync','app:dhis2sync:log');
+            insert into role_privilege values('DHIS_Sync','app:dhis2sync:upload');
+
+ </sql>
+</changeSet>     
+
+</databaseChangeLog>

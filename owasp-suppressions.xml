@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <suppress>
+        <notes><![CDATA[
+   file name: javax.annotation-api-1.3.2.jar
+   ]]></notes>
+        <gav regex="true">^javax\.annotation:javax\.annotation-api:.*$</gav>
+        <cve>CVE-2013-2566</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: js-yaml:3.7.0
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/js\-yaml@.*$</packageUrl>
+        <vulnerabilityName>CWE-94: Improper Control of Generation of Code ('Code Injection')</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+   file name: js-yaml:3.13.1
+   ]]></notes>
+        <packageUrl regex="true">^pkg:npm/js\-yaml@.*$</packageUrl>
+        <vulnerabilityName>813</vulnerabilityName>
+    </suppress>
+</suppressions>

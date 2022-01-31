@@ -1,0 +1,76 @@
+.form-builder-canvas {
+  width: 100%;
+  height: auto;
+  padding: 20px;
+  border: 1px solid $bahmniSecondaryColor;
+  border-radius: 5px 5px 0 0;
+  background: $bahmniPageBg;
+  font-size: 12px;
+  min-height: 472px;
+  .canvas-placeholder{
+    text-align: center;
+  }
+  .canvas-title {
+    text-align: center;
+    border: 1px solid $gray500;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 13px 0;
+    min-height: 50px;
+    line-height: 50px;
+  }
+  .is-red{
+    outline-color: $red;
+  }
+}
+
+.grid {
+   @include clearfix();
+   display: block;
+   width: 100%;
+   margin:0 0 10px;
+   border: 1px dotted $gray500;
+ }
+
+.form-builder-row{
+  border-bottom: 1px dotted $gray500;
+  &:last-child{
+    border-bottom: none;
+  }
+}
+.control-wrapper {
+  position: relative;
+  min-height: 40px;
+  &.control-selected {
+    background-color: $gray50;
+    border: 1px solid $gray450;
+    border-radius: 3px;
+    padding: 5px 0 0 5px;
+    outline: none;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,0.3);
+  }
+  .remove-control-button {
+    position: absolute;
+    right: -9px;
+    top: -21px;
+    padding: 0;
+    outline: none;
+    background: $white;
+    border-radius: 100%;
+    border: 1px solid $gray300;
+    width: 23px;
+    height: 23px;
+    font-size: 12px;
+    line-height: 8px;
+    box-sizing: border-box;
+    color: $error;
+    &:hover {
+      color: $white;
+      background: $error;
+      border-color: $error;
+    }
+  }
+  > .control-wrapper-content {
+    min-height: 40px;
+  }
+}

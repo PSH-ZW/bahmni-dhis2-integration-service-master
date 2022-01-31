@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="130820181606" author="Pavan">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="mapping" schemaName="public"/>
+            </not>
+        </preConditions>
+        <comment>Creating mapping table in public schema</comment>
+        <sql>
+            CREATE TABLE public.mapping(
+                mapping_id SERIAL PRIMARY KEY,
+                mapping_name text,
+                lookup_table json,
+                mapping_json json,
+                created_by text,
+                created_date date,
+                modified_by text,
+                modified_date date
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet id="110920181504" author="Mahitha">
+        <preConditions onFail="MARK_RAN">
+            <columnExists columnName="created_date" tableName="mapping"/>
+        </preConditions>
+        <comment>changing data type to timestamp</comment>
+        <sql>
+            ALTER TABLE mapping DROP COLUMN created_date;
+            ALTER TABLE mapping ADD COLUMN date_created timestamp;
+        </sql>
+    </changeSet>
+
+    <changeSet id="1109201630" author="Mahitha">
+        <preConditions onFail="MARK_RAN">
+            <columnExists columnName="modified_by" tableName="mapping"/>
+        </preConditions>
+        <comment>Adding modified_by again to maintain columns order</comment>
+        <sql>
+            ALTER TABLE mapping DROP COLUMN modified_by;
+            ALTER TABLE mapping ADD COLUMN modified_by text;
+        </sql>
+    </changeSet>
+
+    <changeSet id="110920181631" author="Mahitha">
+        <preConditions onFail="MARK_RAN">
+            <columnExists columnName="modified_date" tableName="mapping"/>
+        </preConditions>
+        <comment>changing data type to timestamp</comment>
+        <sql>
+            ALTER TABLE mapping DROP COLUMN modified_date;
+            ALTER TABLE mapping ADD COLUMN date_modified timestamp;
+        </sql>
+    </changeSet>
+
+    <changeSet id="171020181547" author="Pavan, Mahitha">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="mapping" columnName="mapping_id"/>
+        </preConditions>
+        <sql>
+            ALTER TABLE mapping DROP COLUMN mapping_id;
+            ALTER TABLE mapping ADD CONSTRAINT mapping_name_pkey PRIMARY KEY (mapping_name);
+        </sql>
+    </changeSet>
+
+    <changeSet id="171020181548" author="Pavan, Mahitha">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="marker" schemaName="public"/>
+                <sqlCheck expectedResult="1">SELECT COUNT(*) FROM information_schema.table_constraints WHERE table_name = 'mapping' AND constraint_type='PRIMARY KEY'</sqlCheck>
+            </and>
+        </preConditions>
+        <sql>
+            ALTER TABLE marker ADD CONSTRAINT mapping_name_fkey FOREIGN KEY (program_name) REFERENCES mapping(mapping_name);
+        </sql>
+    </changeSet>
+
+    <changeSet id="051120181308" author="Pavan">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="marker" schemaName="public"/>
+                <sqlCheck expectedResult="1">SELECT COUNT(*) FROM information_schema.table_constraints WHERE table_name = 'marker' and constraint_name='mapping_name_fkey'</sqlCheck>
+            </and>
+        </preConditions>
+        <sql>
+            ALTER TABLE marker DROP CONSTRAINT mapping_name_fkey;
+        </sql>
+    </changeSet>
+
+    <changeSet id="141222112018" author="Pavan">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists columnName="config" tableName="mapping"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE mapping ADD COLUMN config json;
+        </sql>
+    </changeSet>
+    <changeSet id="163405122018" author="Pavan">
+        <comment>Adding some columns again to maintain the column order</comment>
+        <sql>
+            ALTER TABLE mapping DROP COLUMN created_by;
+            ALTER TABLE mapping DROP COLUMN date_created;
+            ALTER TABLE mapping DROP COLUMN modified_by;
+            ALTER TABLE mapping DROP COLUMN date_modified;
+
+            ALTER TABLE mapping ADD COLUMN created_by TEXT;
+            ALTER TABLE mapping ADD COLUMN date_created TIMESTAMP;
+            ALTER TABLE mapping ADD COLUMN modified_by TEXT;
+            ALTER TABLE mapping ADD COLUMN date_modified TEXT;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

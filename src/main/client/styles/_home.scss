@@ -1,0 +1,78 @@
+.app-link {
+  width: 560px;
+  margin: 130px auto;
+  display: flex;
+  a {
+    @include box-shadow-for-section;
+    min-height: 147px;
+    width: 162px;
+    padding: 10px 10px 20px;
+    vertical-align: top;
+    line-height: 1.3em;
+    margin: 10px;
+    text-align: center;
+    color: $bahmniTextColor;
+    border-radius: 3px;
+    cursor: pointer;
+    background: linear-gradient(to bottom, $white, $gray300) $gray300;
+    border: 1px solid $gray300;
+    font-size: 1.3em;
+    i {
+      display: block;
+      font-size: 50px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+    &:hover {
+      background: $gray200;
+      border: 1px solid $gray400;
+    }
+  }
+}
+
+.translations-table {
+  td {
+    width: 450px;
+  }
+  th, td {
+    font-size: 14px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  thead {
+    th {
+      font-weight: 900;
+      color: #fff;
+      background: #669999;
+      border-color: #669999;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  tbody {
+    tr {
+      &.selected {
+        td {
+          color: inherit;
+          background: #298dd5;
+          border-color: #298dd5;
+        }
+      }
+    }
+  }
+}
+.translations-table-container {
+  padding-top: 10px;
+}
+.locale-selector {
+  float: right;
+  select {
+    height: 31px;
+  }
+  label {
+    margin-right: 5px;
+    color: #000;
+    font-size: 16px;
+  }
+}

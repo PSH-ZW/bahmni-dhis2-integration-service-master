@@ -1,0 +1,85 @@
+.service-names-table{
+  padding: 10%;
+}
+
+.send-button{
+  font-size: 14px;
+  width: 125px;
+  background-image: linear-gradient(#a1d030, #88af28);
+  color: white;
+}
+
+.preview-button{
+  font-size: 14px;
+  width: 125px;
+  background-image: linear-gradient(#a1d030, #88af28);
+  color: white;
+  margin-left: 0px;
+}
+
+.service-name{
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000000;
+  font-size: 18px;
+  line-height: 1.1635742;
+  font-weight: bold;
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.time-stamp{
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000000;
+  font-size: 12px;
+  line-height: 1.1635742;
+  font-weight: bold;
+  display: block;
+  text-align: center;
+  margin: 10px;
+}
+
+.preview-table{
+  display: table;
+  margin-top: 15px;
+  border-bottom: 1px solid #888888;
+}
+
+.preview-element{
+  padding: 5px;
+  font-size: 10px;
+  color: black;
+}
+
+.sync-comment-border{
+  border-right: 1px solid #dddddd;
+}
+
+.sync-comment{
+  width: auto;
+  height: 50px;
+  resize: none;
+  padding: 5px 15px;
+  margin: 5px 5%;
+  border: 1px solid #dddddd;
+}
+
+.side-bordered-cell{
+  border-right: 1px solid #888888;
+  border-left: 1px solid #888888;
+}
+
+.message{
+  display: block;
+  text-align: center;
+  font-size: 25px;
+  margin-top: 45px;
+}
+
+.bordered-cell{
+  border: 1px solid black;
+}
+
+.table-header{
+  background-color: #c0c0c0;
+}

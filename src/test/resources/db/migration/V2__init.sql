@@ -1,0 +1,4 @@
+INSERT INTO log (log_id, program, synced_by, comments, status, status_info, date_created) VALUES (11, 'FPS Service', 'superman', 'Second Comment', 'success', '', '2018-10-04 11:21:32.000000');
+INSERT INTO log (log_id, program, synced_by, comments, status, status_info, date_created) VALUES (12, 'HT1 Service', 'admin', 'HTS First Sync', 'failed', 'tracked entity instance has another active enrollment', '2018-10-04 11:24:32.000000');
+INSERT INTO log (log_id, program, synced_by, comments, status, status_info, date_created) VALUES (13, 'HT1 Service', 'superman', 'HTS First Success sync', 'success', '', '2018-10-04 11:28:32.000000');
+INSERT INTO log (log_id, program, synced_by, comments, status, status_info, date_created) VALUES (14, 'FPS Service', 'admin', 'FPS failed sync', 'failed', '', '2018-11-04 11:28:32.000000');
