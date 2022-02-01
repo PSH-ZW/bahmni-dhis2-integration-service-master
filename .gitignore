@@ -31,3 +31,6 @@ src/main/resources/static/
 coverage/
 .DS_Store
 npm-debug.log
+
+### lockfiles ###
+*.lock
