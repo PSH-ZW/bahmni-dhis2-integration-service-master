@@ -36,10 +36,10 @@ public class MarkerDAOImpl implements MarkerDAO {
         mappingList.forEach(mapping -> {
             if (StringUtils.isEmpty(mapping.getCurrent_mapping())) {
 
-                sql.append(createEntriesSql(mapping.getMapping_name()));
+                sql.append(createEntriesSql(mapping.getProgram_name()));
             } else {
 
-                updateExistingUpdateEntries(mapping.getMapping_name());
+                updateExistingUpdateEntries(mapping.getProgram_name());
             }
         });
         jdbcTemplate.update(sql.toString());

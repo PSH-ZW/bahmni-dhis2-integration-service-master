@@ -16,6 +16,14 @@ module.exports = {
         filename: 'bundle.js',
         publicPath: '/dhis-integration/'
     },
+    devServer: {
+        contentBase: path.join(__dirname, './src/main/resources/templates/'),
+        compress: true,
+        port: 3000,
+        hot: true,
+        publicPath: '/dhis-integration/'
+        // historyApiFallback: true
+    },
     plugins: [
         new ExtractTextPlugin('styles.css', {allChunks: true}),
         new CopyWebpackPlugin([
