@@ -75,7 +75,7 @@ public class LoggerDAOImpl {
     }
 
     private String getPrevPageSql() {
-        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created, start_date, end_date \n" +
+        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created \n" +
                 "FROM log \n" +
                 "WHERE date_created >= '%s' \n" +
                 "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
@@ -85,7 +85,7 @@ public class LoggerDAOImpl {
     }
 
     private String getNextPageSql() {
-        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created, start_date, end_date \n" +
+        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created \n" +
                 "FROM log \n" +
                 "WHERE date_created >= '%s' \n" +
                 "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
@@ -95,7 +95,7 @@ public class LoggerDAOImpl {
     }
 
     private String getOnLoadPageSql() {
-        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created, start_date, end_date \n" +
+        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created \n" +
                 "FROM log \n" +
                 "WHERE date_created >= '%s' \n" +
                 "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
