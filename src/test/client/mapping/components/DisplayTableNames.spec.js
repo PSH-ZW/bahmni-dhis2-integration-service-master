@@ -1,6 +1,6 @@
 import 'jsdom-global/register';
 import React from 'react';
-import {configure, mount} from 'enzyme';
+import { configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import sinon from 'sinon';
 import * as MappingActions from '../../../../main/client/mapping/actions/MappingActions';
@@ -13,12 +13,11 @@ describe('DisplayTableNames', () => {
   let rendered;
 
   beforeEach(() => {
-
     rendered = mount(
       <DisplayTableNames
         dispatch={() => {}}
         filteredTables={['pat_identifier', 'program']}
-        filteredTablesAction={()=>{}}
+        filteredTablesAction={() => {}}
         category=""
       />
     );
@@ -44,8 +43,8 @@ describe('DisplayTableNames', () => {
     it('should dispatch getTableColumns on click on li element', () => {
       const sandBox = sinon.createSandbox();
 
-        let mappingActions = sandBox.mock(MappingActions);
-        const getTableColumn = mappingActions.expects('getTableColumns')
+      const mappingActions = sandBox.mock(MappingActions);
+      const getTableColumn = mappingActions.expects('getTableColumns')
         .withArgs('pat_identifier')
         .returns({
           type: 'selectedInstanceTable',

@@ -1,36 +1,35 @@
 export function logs(state = [], action = {}) {
-    switch (action.type) {
+  switch (action.type) {
     case 'logs':
-        return action.logs;
+      return action.logs;
     default:
-        return state;
-    }
+      return state;
+  }
 }
 
 export function filters(state = {}, action = {}) {
-    switch (action.type) {
+  switch (action.type) {
     case 'filterOn':
-        return action.filter;
+      return action.filter;
     default:
-        return state;
-    }
+      return state;
+  }
 }
 
 export function noEventsToDisplay(state = false, action = {}) {
-    switch (action.type) {
+  switch (action.type) {
     case 'noEventsToDisplay':
-        return action.noEvents;
+      return action.noEvents;
     default:
-        return state;
-    }
+      return state;
+  }
 }
 
 export function noFilterEventsToDisplay(state = false, action = {}) {
-    switch (action.type) {
+  switch (action.type) {
     case 'noFilterEventsToDisplay':
-        return action.noFilterEvents;
+      return action.noFilterEvents;
     default:
-        return state;
-    }
+      return state;
+  }
 }
-

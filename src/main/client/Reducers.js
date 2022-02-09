@@ -1,23 +1,29 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 import {
-    allMappingNames,
-    allTables,
-    currentMapping,
-    mappingDetails,
-    mappingJson,
-    mappingConfig,
-    selectedEnrollmentsTable,
-    selectedEventTable,
-    selectedEventTableColumns,
-    selectedInstanceTable,
-    selectedInstanceTableColumns
-} from './mapping/reducers/MappingReducer';
+  allMappingNames,
+  allTables,
+  currentMapping,
+  mappingDetails,
+  mappingJson,
+  mappingConfig,
+  selectedEnrollmentsTable,
+  selectedEventTable,
+  selectedEventTableColumns,
+  selectedInstanceTable,
+  selectedInstanceTableColumns,
+  setDhisStageId,
+  initialSelectedEventTable,
+} from "./mapping/reducers/MappingReducer";
 
-import {mappingNames, syncDetails} from './sync/reducers/SyncReducer';
+import { mappingNames, syncDetails } from './sync/reducers/SyncReducer';
 
-import {hideSpinner, session, showHeader, showHomeButton, showMessage} from './common/Reducers';
+import {
+  hideSpinner, session, showHeader, showHomeButton, showMessage
+} from './common/Reducers';
 
-import {filters, logs, noEventsToDisplay, noFilterEventsToDisplay} from './log/reducers/LogReducer';
+import {
+  filters, logs, noEventsToDisplay, noFilterEventsToDisplay
+} from './log/reducers/LogReducer';
 
 const reducers = combineReducers({
   selectedInstanceTable,
@@ -41,7 +47,9 @@ const reducers = combineReducers({
   logs,
   filters,
   noEventsToDisplay,
-  noFilterEventsToDisplay
+  noFilterEventsToDisplay,
+  dhisStageId: setDhisStageId,
+  initialSelectedEventTable,
 });
 
 export default reducers;
