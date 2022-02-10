@@ -75,19 +75,19 @@ class DescribeFilteredTable extends Component {
     const mappingName = this.refs.mappingName.value;
     const mappings = {};
     mappings.instance = document.getElementsByClassName('instance');
-    const formTableMappings = {};
-    for (let j = 0; j < this.props.selectedEventTable.length; j++) {
-      const formName = this.props.selectedEventTable[j];
-      const elementsObj = {};
-      if (formName.length > 0) {
-        this.props.columns[formName].map((e) => {
-          const elmnt = document.getElementsByClassName(`${formName} ${e}`)[0];
-          elementsObj[e] = elmnt.value;
-        });
-      }
+    const formTableMappings = this.props.allMappingJson;
+    // for (let j = 0; j < this.props.selectedEventTable.length; j++) {
+    //   const formName = this.props.selectedEventTable[j];
+    //   const elementsObj = {};
+    //   if (formName.length > 0) {
+    //     this.props.columns[formName].map((e) => {
+    //       const elmnt = document.getElementsByClassName(`${formName} ${e}`)[0];
+    //       elementsObj[e] = elmnt.value;
+    //     });
+    //   }
 
-      formTableMappings[formName] = elementsObj;
-    }
+    //   formTableMappings[formName] = elementsObj;
+    // }
     const dhisStageId = document.getElementsByClassName('dhis-stage-id')[0].value;
     const payload = {
       formTableMappings,
@@ -173,6 +173,7 @@ const mapStateToProps = (state) => ({
   currentMapping: state.currentMapping,
   columns: state.selectedEventTableColumns,
   dhisStageId: state.dhisStageId,
+  allMappingJson: state.mappingJson,
 });
 
 

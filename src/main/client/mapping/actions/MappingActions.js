@@ -80,7 +80,7 @@ export function currentMapping(mappingName = '') {
   };
 }
 
-export function mappingJson(mappingJson = { instance: {}, enrollments: {}, event: {} }) {
+export function mappingJson(mappingJson = {}) {
   return {
     type: 'mappingJson',
     mappingJson
@@ -107,6 +107,10 @@ export function importedMappings(mappingNames = []) {
   };
 }
 
+export const isObjectValidAndNotEmpty = (anObject) => (
+    anObject && typeof anObject === 'object' && Object.keys(anObject).length > 0
+);
+
 export function hasNoMappings(mappings) {
   const formTableMappings = mappings["formTableMappings"];
   const formTableMappingsKeys = Object.keys(mappings["formTableMappings"]);
@@ -115,7 +119,7 @@ export function hasNoMappings(mappings) {
     const elementIds = Object.values(formTableMappings[el]);
     const t = elementIds.filter((element) => {
         console.log(element);
-        return element !== "";
+        return isObjectValidAndNotEmpty(element);
       }).length > 0;
     return t;
   });
@@ -262,6 +266,21 @@ export function getMapping(mappingNameToEdit, history) {
       const ajax = Ajax.instance();
       const response = parseResponse(await ajax.get('/dhis-integration/api/getMapping', { mappingName: mappingNameToEdit }));
       const mappingJsonData = JSON.parse(response.mapping_json.value);
+      // const mappingJsonData = {
+      //   config: { openLatestCompletedEnrollment: "" },
+      //   dhisStageId: "dfdfdfdf",
+      //   formTableMappings: {
+      //     assessment_and_plan_new: {
+      //       id: { displayName: "cartist", id: "sdbsdnsd" },
+      //     },
+      //     art_initial_visit_compulsory_question_1_of_2_new: {
+      //       id: { displayName: "artist", id: "avxytsy" },
+      //     },
+      //     art_initial_visit_compulsory_question_2_of_2_6708: {
+      //       id: { displayName: "bartist", id: "bsgfsdt" },
+      //     },
+      //   },
+      // };
       const dhisStageId = _.get(mappingJsonData, 'dhisStageId', '');
       const tableNames = Object.keys(mappingJsonData.formTableMappings);
       dispatch(

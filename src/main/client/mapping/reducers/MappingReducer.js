@@ -101,7 +101,7 @@ export function currentMapping(state = '', action = {}) {
   }
 }
 
-export function mappingJson(state = { instance: {}, enrollments: {}, event: {} }, action = {}) {
+export function mappingJson(state = {}, action = {}) {
   switch (action.type) {
     case 'mappingJson':
       return action.mappingJson;

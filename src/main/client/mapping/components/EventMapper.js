@@ -5,6 +5,7 @@ import ColumnMappings from './ColumnMappings';
 import DisplayTableNames from './DisplayTableNames';
 import { filterTables } from '../../utils/MappingUtil';
 import { selectedEventTable } from '../actions/MappingActions';
+import ColumnMappingsAutocomplete from './ColumnMappingsAutocomplete';
 
 class EventMapper extends Component {
   constructor() {
@@ -37,11 +38,10 @@ class EventMapper extends Component {
     if (!tables) {
       tables = [];
     }
-    tables.push('');
+    tables.push("");
     this.props.dispatch(selectedEventTable(tables));
     this.forceUpdate();
   }
-
 
   render() {
     if (this.props && this.props.selectedTable) {
@@ -81,9 +81,10 @@ class EventMapper extends Component {
                   }}
                   selectedTable={this.props.selectedTable}
                 />
-                <ColumnMappings
+                <ColumnMappingsAutocomplete
                   name={e}
                   index={indx}
+                  dispatch={this.props.dispatch}
                   columns={this.props.columns[e]}
                   mappingJson={this.props.mappingJson[e]}
                   category={`events ${e}`}
