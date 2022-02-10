@@ -3,6 +3,7 @@ package com.thoughtworks.bahmnidhis2integrationservice.service.impl;
 import com.thoughtworks.bahmnidhis2integrationservice.dao.impl.MappingDAOImpl;
 import com.thoughtworks.bahmnidhis2integrationservice.exception.NoMappingFoundException;
 import com.thoughtworks.bahmnidhis2integrationservice.model.Mapping;
+import com.thoughtworks.bahmnidhis2integrationservice.repository.SyncRepository;
 import com.thoughtworks.bahmnidhis2integrationservice.service.MappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,9 @@ public class MappingServiceImpl implements MappingService {
 
     @Autowired
     private MappingDAOImpl mappingDAO;
+
+    @Autowired
+    private SyncRepository syncRepository;
 
     @Override
     public String saveMapping(String mappingName, String lookupTable, String mappingJson, String config, String currentMapping, String user) throws Exception {
@@ -40,4 +44,10 @@ public class MappingServiceImpl implements MappingService {
     public List<Map<String, Object>> getAllMappings() throws NoMappingFoundException {
         return mappingDAO.getAllMappings();
     }
+
+    @Override
+    public List<Map<String, String>> searchForDataElement(String searchString) {
+        return syncRepository.searchDataElements(searchString);
+    }
+
 }

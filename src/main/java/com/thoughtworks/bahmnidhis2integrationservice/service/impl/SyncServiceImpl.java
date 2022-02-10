@@ -5,6 +5,9 @@ import com.thoughtworks.bahmnidhis2integrationservice.service.SyncService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+
 @Component
 public class SyncServiceImpl implements SyncService {
 
@@ -12,7 +15,8 @@ public class SyncServiceImpl implements SyncService {
     private SyncRepository syncRepository;
 
     @Override
-    public void sync(String body) throws Exception {
-        syncRepository.sync(body);
+    public List<Map<String, String>> searchDataElements(String body) throws Exception {
+        syncRepository.searchDataElements(body);
+        return null;
     }
 }

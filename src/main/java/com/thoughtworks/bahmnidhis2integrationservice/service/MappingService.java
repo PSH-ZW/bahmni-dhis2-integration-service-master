@@ -16,4 +16,6 @@ public interface MappingService {
     String saveMapping(List<Mapping> mappingsList) throws Exception;
 
     List<Map<String, Object>> getAllMappings() throws NoMappingFoundException;
+
+    List<Map<String, String>> searchForDataElement(String searchString);
 }

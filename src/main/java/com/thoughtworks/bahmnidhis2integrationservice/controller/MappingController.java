@@ -98,4 +98,10 @@ public class MappingController {
 
         return responseObj;
     }
+
+    @GetMapping("/searchDataElements")
+    @ResponseBody
+    public List<Map<String, String>> searchDataElements(@RequestParam String searchString) {
+        return mappingService.searchForDataElement(searchString);
+    }
 }
