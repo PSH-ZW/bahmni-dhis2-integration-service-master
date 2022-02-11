@@ -61,6 +61,16 @@ class App extends Component {
             Logs
           </Link>
           )}
+          {this.props.session.privileges.includes(privileges.LOG) && (
+          <Link
+            to="/dhis-integration/pendingsync"
+            className="pendingsync-link"
+            // onClick={() => this.logEvent(auditLogEventDetails.OPEN_DHIS_LOG)}
+          >
+            <i class="fa fa-refresh" ></i>
+            Pending Sync
+          </Link>
+          )}
         </div>
       </div>
     );

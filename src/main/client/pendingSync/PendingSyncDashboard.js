@@ -42,12 +42,6 @@ class PendingSyncDashboard extends React.Component {
     // await this.props.dispatch(ensureActiveSession());
   }
 
-  async onClick() {
-    console.log('clicked');
-    this.loadRows();
-  }
-
-
   renderRows() {
     console.log('rows', this.state.rows);
     return this.state.rows.map((row) => (
@@ -80,7 +74,7 @@ class PendingSyncDashboard extends React.Component {
               type="submit"
               // className="send-button"
               disabled={false}
-              onClick={this.onClick}
+              onClick={() => { this.loadRows();}}
             >
               Refresh
             </button>
