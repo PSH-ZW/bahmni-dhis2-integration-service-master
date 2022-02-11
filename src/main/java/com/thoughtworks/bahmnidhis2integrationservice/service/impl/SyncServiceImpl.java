@@ -20,6 +20,9 @@ public class SyncServiceImpl implements SyncService {
     @Autowired
     private SyncDataDAO syncDataDAO;
 
+    private static final String PROGRAM_ID = "program_id";
+    private static final String EVENTS_LEFT_TO_SYNC = "events_left_to_sync";
+
     @Override
     public List<Map<String, String>> searchDataElements(String body) throws Exception {
         syncRepository.searchDataElements(body);
@@ -31,8 +34,8 @@ public class SyncServiceImpl implements SyncService {
         List<Map<String, Object>> remainingCountDataForAllPrograms = syncDataDAO.getEventsLeftToSync();
         List<KeyValue<String, String>> programCountKeyValues = new ArrayList<>();
         for (Map<String, Object> remainingCountData : remainingCountDataForAllPrograms) {
-            programCountKeyValues.add(new KeyValue<>(remainingCountData.get("program_id").toString(),
-                    remainingCountData.get("events_left_to_sync").toString()));
+            programCountKeyValues.add(new KeyValue<>(remainingCountData.get(PROGRAM_ID).toString(),
+                    remainingCountData.get(EVENTS_LEFT_TO_SYNC).toString()));
         }
         return programCountKeyValues;
     }
