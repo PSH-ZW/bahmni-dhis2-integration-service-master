@@ -41,7 +41,11 @@ export default class DisplayOptions extends Component {
   render() {
     return (
       <div className="tables-list">
-        <ul type="none" className="filtered-tables">
+        <ul
+          type="none"
+          className="filtered-tables"
+          style={{ minWidth: "500px" }}
+        >
           {this.props &&
             this.props.options &&
             this.props.options.length > 0 &&

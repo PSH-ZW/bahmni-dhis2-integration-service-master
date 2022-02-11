@@ -88,7 +88,7 @@ class EventMapper extends Component {
                   columns={this.props.columns[e]}
                   mappingJson={this.props.mappingJson[e]}
                   category={`events ${e}`}
-                  dhisMappingHeader="DHIS2 Data Element ID"
+                  dhisMappingHeader="DHIS2 Data Element"
                   mappingConfig={{}}
                 />
               </div>

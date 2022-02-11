@@ -88,10 +88,11 @@ class DescribeFilteredTable extends Component {
 
     //   formTableMappings[formName] = elementsObj;
     // }
-    const dhisStageId = document.getElementsByClassName('dhis-stage-id')[0].value;
+    const dhisProgramStageId =
+      document.getElementsByClassName("dhis-stage-id")[0].value;
     const payload = {
       formTableMappings,
-      dhisStageId,
+      dhisProgramStageId,
     };
     const lookupTable = {
       instance: this.props.selectedInstanceTable,

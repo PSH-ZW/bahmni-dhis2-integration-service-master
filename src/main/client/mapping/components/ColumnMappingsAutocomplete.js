@@ -16,6 +16,7 @@ class ColumnMappingsAutocomplete extends Component {
     this.insertValues = this.insertValues.bind(this);
     this.updateOptions = this.updateOptions.bind(this);
     this.onOptionSelect = this.onOptionSelect.bind(this);
+    this.debounceSearch = this.debounceSearch.bind(this);
     this.state = {
       options: {},
     };
@@ -33,39 +34,37 @@ class ColumnMappingsAutocomplete extends Component {
     this.insertValues();
   }
 
-  async updateOptions(e, indx, column) {
-    const enteredText = e.target.value;
-
+  async updateOptions(enteredText, indx, column) {
     const ajax = Ajax.instance();
     // this.props.dispatch(hideSpinner(false));
     try {
-      const response = await ajax.get(
-        `/dhis-integration/api/searchDataElements?searchString=${enteredText}`
-      );
-      const newOptions = filterOptions(enteredText, response);
-      this.setState((prevState) => {
-        return {
-          options: { ...prevState.options, [column]: newOptions },
-        };
-      },()=>{
-        const x = _.get(this.state, ['options', column ], []);
-        if(x.length>0){
-          this.forceUpdate(()=>{
-              const el = document.getElementsByClassName(
-                `${this.props.name} ${column}`
-              )[0];
-              el.value = enteredText;
-          });
+      let newOptions = [];
+      if(enteredText !== ''){
+        const response = await ajax.get(
+          `/dhis-integration/api/searchDataElements?searchString=${enteredText}`
+        );
+        newOptions = filterOptions(enteredText, response);
+      }
+
+      this.setState(
+        (prevState) => {
+          return {
+            options: { ...prevState.options, [column]: newOptions },
+          };
+        },
+        () => {
+          const x = _.get(this.state, ["options", column], []);
+          this.forceUpdate();
         }
-      });
+      );
       // this.props.dispatch(hideSpinner(true));
     } catch (e) {
-        this.setState((prevState) => {
-          return {
-            options: {},
-          };
-        });
-        // this.props.dispatch(hideSpinner(true));
+      this.setState((prevState) => {
+        return {
+          options: {},
+        };
+      });
+      // this.props.dispatch(hideSpinner(true));
     }
   }
 
@@ -109,17 +108,31 @@ class ColumnMappingsAutocomplete extends Component {
   }
 
   onOptionSelect(val, column, index) {
-    const element = document.getElementsByClassName(`${this.props.name} ${column}`)[0];
+    const element = document.getElementsByClassName(
+      `${this.props.name} ${column}`
+    )[0];
     element.value = val;
     this.setState({ options: [] });
     let newMappingJson = this.props.allMappingJson;
-    try{
-      newMappingJson[this.props.name][column] = val
-    } catch(e){
-      newMappingJson = { ...newMappingJson,[this.props.name]: {[column]: val} };
+    try {
+      newMappingJson[this.props.name][column] = val;
+    } catch (e) {
+      newMappingJson = {
+        ...newMappingJson,
+        [this.props.name]: { [column]: val },
+      };
     }
     this.props.dispatch(mappingJson(newMappingJson));
     this.forceUpdate();
+  }
+
+  debounceSearch(e1, index, column) {
+    let timer;
+    clearTimeout(timer);
+    const val = e1.target.value;
+    timer = setTimeout(() => {
+      this.updateOptions(val, index, column);
+    }, 300);
   }
 
   renderColumns() {
@@ -133,12 +146,13 @@ class ColumnMappingsAutocomplete extends Component {
           <input
             type="text"
             name="tableName"
-            placeholder="Enter at least 3 characters to search"
-            onKeyUp={(e) => {
-              this.updateOptions(e, index, column);
+            placeholder=""
+            onKeyUp={(e1) => {
+              this.debounceSearch(e1, index, column);
             }}
             className={`${this.props.name} ${column}`}
             ref={column}
+            style={{ minWidth: "500px" }}
           />
           <DisplayOptions
             options={_.get(this.state, ["options", column], [])}
