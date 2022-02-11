@@ -205,6 +205,8 @@ export function saveMappings(mappingName = '', allMappings, lookupTable, history
     dispatch(showMessage("Please provide a program events table name", "error"));
   } else if (mappingNameIsNotUnique(state, mappingName)) {
     dispatch(showMessage("Please provide unique mapping name", "error"));
+  } else if (!mappingObj.dhisProgramStageId) {
+    dispatch(showMessage("Please provide Dhis Program Stage Id", "error"));
   } else if (hasNoMappings(allMappings)) {
     dispatch(
       showMessage(
@@ -281,7 +283,7 @@ export function getMapping(mappingNameToEdit, history) {
       //     },
       //   },
       // };
-      const dhisStageId = _.get(mappingJsonData, 'dhisStageId', '');
+      const dhisStageId = _.get(mappingJsonData, "dhisProgramStageId", "");
       const tableNames = Object.keys(mappingJsonData.formTableMappings);
       dispatch(
         mappingJson(mappingJsonData.formTableMappings)

@@ -6,6 +6,7 @@ import DisplayTableNames from './DisplayTableNames';
 import { filterTables } from '../../utils/MappingUtil';
 import { selectedEventTable } from '../actions/MappingActions';
 import ColumnMappingsAutocomplete from './ColumnMappingsAutocomplete';
+import DisplayProgramEventTableNames from './DisplayProgramEventTableNames';
 
 class EventMapper extends Component {
   constructor() {
@@ -62,6 +63,7 @@ class EventMapper extends Component {
               <div style={{ marginTop: "5em" }}>
                 <span>Please select program events table</span>
                 <input
+                  autocomplete="off"
                   type="text"
                   ref={`tablesSearch${e}`}
                   name="tableName"
@@ -71,7 +73,7 @@ class EventMapper extends Component {
                   }}
                   className="table-input"
                 />
-                <DisplayTableNames
+                <DisplayProgramEventTableNames
                   index={indx}
                   filteredTables={this.state.filteredTables[indx]}
                   dispatch={this.props.dispatch}

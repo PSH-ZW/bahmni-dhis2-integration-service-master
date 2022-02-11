@@ -44,6 +44,8 @@ class ColumnMappingsAutocomplete extends Component {
           `/dhis-integration/api/searchDataElements?searchString=${enteredText}`
         );
         newOptions = filterOptions(enteredText, response);
+      } else {
+        this.onOptionSelect(null, column, indx);
       }
 
       this.setState(
@@ -132,7 +134,7 @@ class ColumnMappingsAutocomplete extends Component {
     const val = e1.target.value;
     timer = setTimeout(() => {
       this.updateOptions(val, index, column);
-    }, 300);
+    }, 100);
   }
 
   renderColumns() {
@@ -153,6 +155,7 @@ class ColumnMappingsAutocomplete extends Component {
             className={`${this.props.name} ${column}`}
             ref={column}
             style={{ minWidth: "500px" }}
+            autocomplete="off"
           />
           <DisplayOptions
             options={_.get(this.state, ["options", column], [])}
