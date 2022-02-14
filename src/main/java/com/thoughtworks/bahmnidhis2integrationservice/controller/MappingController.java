@@ -110,4 +110,10 @@ public class MappingController {
     public List<Map<String, String>> searchTrackedEntityAttributes(@RequestParam String searchString) {
         return mappingService.searchTrackedEntityAttribute(searchString);
     }
+
+    @GetMapping("/getProgramStages")
+    @ResponseBody
+    public List<Map<String, String>> getProgramStages() {
+        return mappingService.getProgramStages();
+    }
 }

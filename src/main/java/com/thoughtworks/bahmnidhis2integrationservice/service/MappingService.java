@@ -19,4 +19,5 @@ public interface MappingService {
 
     List<Map<String, String>> searchForDataElement(String searchString);
     List<Map<String, String>> searchTrackedEntityAttribute(String searchString);
+    List<Map<String, String>> getProgramStages();
 }

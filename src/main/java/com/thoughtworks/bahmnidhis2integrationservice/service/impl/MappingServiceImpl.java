@@ -54,4 +54,9 @@ public class MappingServiceImpl implements MappingService {
     public List<Map<String, String>> searchTrackedEntityAttribute(String searchString) {
         return syncRepository.searchTrackedEntityAttributes(searchString);
     }
+
+    @Override
+    public List<Map<String, String>> getProgramStages() {
+        return syncRepository.getProgramStages();
+    }
 }
