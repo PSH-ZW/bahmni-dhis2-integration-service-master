@@ -1,6 +1,6 @@
 package com.thoughtworks.bahmnidhis2integrationservice.repository;
 
-import com.thoughtworks.bahmnidhis2integrationservice.model.DataElementSearchResponse;
+import com.thoughtworks.bahmnidhis2integrationservice.model.SearchResponse;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +19,10 @@ public class SyncRepository {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final String SEARCH_URI = "/api/29/dataElements?filter=name:ne:default&fields=displayName,id&" +
-            "order=displayName:ASC&pageSize=20&filter=identifiable:token:%s";
+    private static final String BASE_SEARCH_URI = "/api/29/%s?" +
+            "filter=name:ne:default&fields=displayName,id&order=displayName:ASC&pageSize=20&filter=identifiable:token:%s";
+    private static final String DATA_ELEMENTS = "dataElements";
+    private static final String TRACKED_ENTITY_ATTRIBUTES = "trackedEntityAttributes";
 
     @Value("${dhis2.url}")
     private String dhis2Url;
@@ -35,16 +37,24 @@ public class SyncRepository {
     private RestTemplate restTemplate;
 
     public List<Map<String, String>> searchDataElements(String searchString) {
-        ResponseEntity<DataElementSearchResponse> responseEntity = null;
+        SearchResponse response = getSearchResult(DATA_ELEMENTS, searchString);
+        return response != null ? response.getDataElements() : null;
+    }
+
+    public List<Map<String, String>> searchTrackedEntityAttributes(String searchString) {
+        SearchResponse response = getSearchResult(TRACKED_ENTITY_ATTRIBUTES, searchString);
+        return response != null ? response.getTrackedEntityAttributes() : null;
+    }
+
+    private SearchResponse getSearchResult(String searchType, String searchString) {
+        ResponseEntity<SearchResponse> responseEntity;
         try {
-            StringBuilder URI = new StringBuilder(dhis2Url);
-            URI.append(String.format(SEARCH_URI, searchString));
             responseEntity = restTemplate
-                    .exchange(URI.toString(), HttpMethod.GET,
-                            new HttpEntity<>(getHttpHeaders()), DataElementSearchResponse.class);
-            DataElementSearchResponse dataElementSearchResponse = responseEntity.getBody();
+                    .exchange(dhis2Url + String.format(BASE_SEARCH_URI, searchType, searchString), HttpMethod.GET,
+                            new HttpEntity<>(getHttpHeaders()), SearchResponse.class);
+            SearchResponse dataElementSearchResponse = responseEntity.getBody();
             if(dataElementSearchResponse != null) {
-                return dataElementSearchResponse.getDataElements();
+                return responseEntity.getBody();
             }
         } catch (Exception e) {
             logger.error("Could not search Data Elements from DHIS2. " + e);

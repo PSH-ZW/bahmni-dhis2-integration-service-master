@@ -24,12 +24,6 @@ public class SyncServiceImpl implements SyncService {
     private static final String EVENTS_LEFT_TO_SYNC = "events_left_to_sync";
 
     @Override
-    public List<Map<String, String>> searchDataElements(String body) throws Exception {
-        syncRepository.searchDataElements(body);
-        return null;
-    }
-
-    @Override
     public List<KeyValue<String, String>> getCountOfEventsLeftToSync() {
         List<Map<String, Object>> remainingCountDataForAllPrograms = syncDataDAO.getEventsLeftToSync();
         List<KeyValue<String, String>> programCountKeyValues = new ArrayList<>();

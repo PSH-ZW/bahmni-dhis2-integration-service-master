@@ -50,4 +50,8 @@ public class MappingServiceImpl implements MappingService {
         return syncRepository.searchDataElements(searchString);
     }
 
+    @Override
+    public List<Map<String, String>> searchTrackedEntityAttribute(String searchString) {
+        return syncRepository.searchTrackedEntityAttributes(searchString);
+    }
 }

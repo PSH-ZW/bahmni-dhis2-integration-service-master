@@ -104,4 +104,10 @@ public class MappingController {
     public List<Map<String, String>> searchDataElements(@RequestParam String searchString) {
         return mappingService.searchForDataElement(searchString);
     }
+
+    @GetMapping("/searchTrackedEntityAttributes")
+    @ResponseBody
+    public List<Map<String, String>> searchTrackedEntityAttributes(@RequestParam String searchString) {
+        return mappingService.searchTrackedEntityAttribute(searchString);
+    }
 }
