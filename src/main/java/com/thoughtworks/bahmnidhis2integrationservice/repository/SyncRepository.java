@@ -21,9 +21,9 @@ public class SyncRepository {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final String PROGRAM_DETAILS_URI = "/api/29/metadata?" +
+    private static final String PROGRAM_DETAILS_URI = "/api/metadata?" +
             "filter=id:eq:%s&programs:fields=programStages[displayName,id]";
-    private static final String BASE_SEARCH_URI = "/api/29/%s?" +
+    private static final String BASE_SEARCH_URI = "/api/%s?" +
             "filter=name:ne:default&fields=displayName,id&order=displayName:ASC&pageSize=20&filter=identifiable:token:%s";
 
     private static final String DATA_ELEMENTS = "dataElements";
