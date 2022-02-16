@@ -105,7 +105,7 @@ class DescribeFilteredTable extends Component {
     const mappings = {};
     mappings.instance = document.getElementsByClassName("instance");
     const formTableMappings = this.props.allMappingJson;
-    const dhisProgramStageId =this.state.dhisStageId.id;
+    const dhisProgramStageId =_.get(this, 'state.dhisStageId.id') || this.refs.dhisStageId.value;
     const payload = {
       formTableMappings,
       dhisProgramStageId,

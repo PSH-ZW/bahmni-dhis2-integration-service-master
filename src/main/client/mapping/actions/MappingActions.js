@@ -187,7 +187,7 @@ function afterOnSaveMappingSuccessResponse(dispatch, response, history) {
 export function saveMappings(mappingName = '', allMappings, lookupTable, history = {}, currentMappingName, openLatestCompletedEnr = '') {
   return async (dispatch, getState) => {
     // const mappingObj = createJson(allMappings);
-    const mappingObj = allMappings;
+    const mappingObj = JSON.parse(JSON.stringify(allMappings));
     mappingObj.config = {};
     await dispatch(getAllMappings());
     const state = getState();
