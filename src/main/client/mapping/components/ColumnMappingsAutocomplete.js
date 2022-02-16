@@ -40,8 +40,12 @@ class ColumnMappingsAutocomplete extends Component {
     try {
       let newOptions = [];
       if(enteredText !== ''){
+        let endpoint = 'searchDataElements';
+        if(this.props.category === "instance"){
+          endpoint = 'searchTrackedEntityAttributes';
+        }
         const response = await ajax.get(
-          `/dhis-integration/api/searchDataElements?searchString=${enteredText}`
+          `/dhis-integration/api/${endpoint}?searchString=${enteredText}`
         );
         newOptions = filterOptions(enteredText, response);
       } else {
@@ -73,8 +77,7 @@ class ColumnMappingsAutocomplete extends Component {
   insertValues() {
     const { mappingJson } = this.props;
     console.log("vauess", mappingJson);
-    const { searchable } = this.props.mappingConfig;
-    const { comparable } = this.props.mappingConfig;
+    const { searchable, comparable } = this.props.mappingConfig;
     if (!this.props.columns || this.props.columns.length == 0) {
       return;
     }
@@ -167,6 +170,9 @@ class ColumnMappingsAutocomplete extends Component {
             selectedTable="dfhf"
           />
         </td>
+        <td className="mapping-data-element" style={{textAlign:'center'}}>
+          {_.get(this, ["props", "mappingJson", column, "id"])}
+        </td>
 
         {this.props.category === "instance" && (
           <td className="mapping-data-element">
@@ -207,11 +213,12 @@ class ColumnMappingsAutocomplete extends Component {
                 <th className="mapping-header">
                   {this.props.dhisMappingHeader}
                 </th>
+                <th className="mapping-header"  style={{ width: '150px'}}>ID</th>
                 {this.props.category === "instance" && (
-                  <th className="mapping-header">Searchable</th>
+                  <th className="mapping-header" style={{ width: '150px'}}>Searchable</th>
                 )}
                 {this.props.category === "instance" && (
-                  <th className="mapping-header">Comparable</th>
+                  <th className="mapping-header" style={{ width: '150px'}}>Comparable</th>
                 )}
               </tr>
               {this.props.columns &&
@@ -242,6 +249,7 @@ const mapStateToProps = (state) => ({
   initialSelectedEventTable: state.initialSelectedEventTable,
   selectedTables: state.selectedTable,
   allMappingJson: state.mappingJson,
+  mappingConfig: state.mappingConfig,
   state,
 });
 

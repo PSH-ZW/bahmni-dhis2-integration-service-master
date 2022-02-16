@@ -163,6 +163,30 @@ export function createJson(allMappings) {
   return { mapping, config };
 }
 
+export function createConfig() {
+  const config = {
+    searchable: [],
+    comparable: [],
+  };
+  let columnName;
+  let mappingValue;
+  let searchableCell;
+  let comparableCell;
+  const elements = document.getElementsByClassName("mapping-row table-row instance");
+
+    Array.from(elements).forEach((mappingRow) => {
+      columnName = mappingRow.firstElementChild.innerHTML;
+      mappingValue = mappingRow.children[0].firstChild.data;
+      searchableCell = mappingRow.children[3].firstElementChild.checked;
+      comparableCell = mappingRow.children[4].firstElementChild.checked;
+      if (mappingValue) {
+        searchableCell && config.searchable.push(columnName);
+        comparableCell && config.comparable.push(columnName);
+      }
+    });
+  return config;
+}
+
 function mappingNameIsNotUnique(state, mappingName) {
   const trimmedMappingName = mappingName.trim();
   if (trimmedMappingName === state.currentMapping) {
@@ -188,7 +212,7 @@ export function saveMappings(mappingName = '', allMappings, lookupTable, history
   return async (dispatch, getState) => {
     // const mappingObj = createJson(allMappings);
     const mappingObj = JSON.parse(JSON.stringify(allMappings));
-    mappingObj.config = {};
+    mappingObj.config = createConfig();;
     await dispatch(getAllMappings());
     const state = getState();
 
@@ -205,7 +229,7 @@ export function saveMappings(mappingName = '', allMappings, lookupTable, history
     dispatch(showMessage("Please provide a program events table name", "error"));
   } else if (mappingNameIsNotUnique(state, mappingName)) {
     dispatch(showMessage("Please provide unique mapping name", "error"));
-  } else if (!mappingObj.dhisProgramStageId) {
+  } else if (!mappingObj.dhisProgramStageId && allMappings.isPatientMapping) {
     dispatch(showMessage("Please provide Dhis Program Stage Id", "error"));
   } else if (hasNoMappings(allMappings)) {
     dispatch(
@@ -268,21 +292,6 @@ export function getMapping(mappingNameToEdit, history) {
       const ajax = Ajax.instance();
       const response = parseResponse(await ajax.get('/dhis-integration/api/getMapping', { mappingName: mappingNameToEdit }));
       const mappingJsonData = JSON.parse(response.mapping_json.value);
-      // const mappingJsonData = {
-      //   config: { openLatestCompletedEnrollment: "" },
-      //   dhisStageId: "dfdfdfdf",
-      //   formTableMappings: {
-      //     assessment_and_plan_new: {
-      //       id: { displayName: "cartist", id: "sdbsdnsd" },
-      //     },
-      //     art_initial_visit_compulsory_question_1_of_2_new: {
-      //       id: { displayName: "artist", id: "avxytsy" },
-      //     },
-      //     art_initial_visit_compulsory_question_2_of_2_6708: {
-      //       id: { displayName: "bartist", id: "bsgfsdt" },
-      //     },
-      //   },
-      // };
       const dhisStageId = _.get(mappingJsonData, "dhisProgramStageId", "");
       const tableNames = Object.keys(mappingJsonData.formTableMappings);
       dispatch(

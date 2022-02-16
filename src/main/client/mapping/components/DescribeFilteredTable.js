@@ -50,7 +50,9 @@ class DescribeFilteredTable extends Component {
     if (mappingName) {
       this.props.dispatch(getMapping(mappingName, this.props.history));
       this.refs.mappingName.value = mappingName;
-      this.refs.dhisStageId.value = this.props.dhisStageId;
+      if(_.get(this, "props.allMappingJson.isPatientMapping", false)) {
+        this.refs.dhisStageId.value = this.props.dhisStageId;
+      }
     }
     this.props.dispatch(getTables());
     this.getStageIds();
@@ -74,7 +76,10 @@ class DescribeFilteredTable extends Component {
 
   componentWillReceiveProps(nextProps) {
     console.log("nxtprops", nextProps);
-    if (nextProps.dhisStageId) {
+    if (
+      nextProps.dhisStageId &&
+      _.get(this, "props.allMappingJson.isPatientMapping", false)
+    ) {
       this.refs.dhisStageId.value = nextProps.dhisStageId;
     }
   }
@@ -105,10 +110,11 @@ class DescribeFilteredTable extends Component {
     const mappings = {};
     mappings.instance = document.getElementsByClassName("instance");
     const formTableMappings = this.props.allMappingJson;
-    const dhisProgramStageId =_.get(this, 'state.dhisStageId.id') || this.refs.dhisStageId.value;
+    const dhisProgramStageId =_.get(this, 'state.dhisStageId.id', _.get(this, 'refs.dhisStageId.value'));
     const payload = {
       formTableMappings,
       dhisProgramStageId,
+      config: mappingConfig,
     };
     const lookupTable = {
       instance: this.props.selectedInstanceTable,
@@ -129,7 +135,7 @@ class DescribeFilteredTable extends Component {
 
   onOptionSelect(val) {
     console.log("dhisstageid", val);
-    this.refs.dhisStageId.value = val.id;
+    this.refs.dhisStageId.value = `${val.displayName} (${val.id})`;
     this.setState((prevState) => {
       return {
         ...prevState,
@@ -173,38 +179,36 @@ class DescribeFilteredTable extends Component {
           placeholder="Enter Mapping Name"
         />
         <br />
-        <EnrollmentMapper
-          setOpenLatestCompletedEnrollment={
-            this._setOpenLatestCompletedEnrollment
-          }
-        />
-        <br />
-        <div>DHIS Program Stage ID</div>
-        {/* <input
-          type="text"
-          ref="dhisStageId"
-          className="dhis-stage-id dhis-stage-id-input mapping-name-input"
-          placeholder="Enter DHIS Program Stage ID"
-        /> */}
-        <input
-          type="text"
-          name="dhisStageId"
-          placeholder="Enter DHIS Program Stage ID"
-          onKeyUp={this.updateOptions}
-          className="dhis-stage-id dhis-stage-id-input mapping-name-input"
-          ref="dhisStageId"
-          autocomplete="off"
-        />
-        <DisplayOptions
-          options={_.get(this.state, "dhisStageIdOptionsFiltered", [])}
-          dispatch={this.props.dispatch}
-          category="events"
-          filteredTablesAction={(val) => {
-            this.onOptionSelect(val);
-          }}
-          selectedTable="dfhf"
-          maxWidth="350px"
-        />
+        {_.get(this, "props.allMappingJson.isPatientMapping", false) && (
+          <React.Fragment>
+            <EnrollmentMapper
+              setOpenLatestCompletedEnrollment={
+                this._setOpenLatestCompletedEnrollment
+              }
+            />
+            <br />
+            <div>DHIS Program Stage ID</div>
+            <input
+              type="text"
+              name="dhisStageId"
+              placeholder="Enter DHIS Program Stage ID"
+              onKeyUp={this.updateOptions}
+              className="dhis-stage-id dhis-stage-id-input mapping-name-input"
+              ref="dhisStageId"
+              autocomplete="off"
+            />
+            <DisplayOptions
+              options={_.get(this.state, "dhisStageIdOptionsFiltered", [])}
+              dispatch={this.props.dispatch}
+              category="events"
+              filteredTablesAction={(val) => {
+                this.onOptionSelect(val);
+              }}
+              selectedTable="dfhf"
+              maxWidth="350px"
+            />
+          </React.Fragment>
+        )}
 
         <EventMapper />
 

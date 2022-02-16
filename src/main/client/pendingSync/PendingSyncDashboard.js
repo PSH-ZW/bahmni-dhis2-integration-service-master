@@ -60,7 +60,7 @@ class PendingSyncDashboard extends React.Component {
     return (
       <div>
         <Message />
-        <div className="center service-names-table">
+        <div className="pending-sync">
           <Spinner hide={this.props.hideSpinner} />
           <div
             style={{
@@ -69,17 +69,17 @@ class PendingSyncDashboard extends React.Component {
               justifyContent: "flex-end",
             }}
           >
-            {/* <h3>Pending Sync</h3> */}
             <button
               type="submit"
-              // className="send-button"
+              className="send-button"
               disabled={false}
-              onClick={() => { this.loadRows();}}
+              onClick={() => {
+                this.loadRows();
+              }}
             >
               Refresh
             </button>
           </div>
-            {/* {JSON.stringify(this.state.rows)} */}
           <section className="all-mappings-sections">
             <table className="mapping-table">
               <tbody>

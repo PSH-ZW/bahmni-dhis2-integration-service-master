@@ -7,6 +7,7 @@ import { filterTables } from '../../utils/MappingUtil';
 import { selectedEventTable } from '../actions/MappingActions';
 import ColumnMappingsAutocomplete from './ColumnMappingsAutocomplete';
 import DisplayProgramEventTableNames from './DisplayProgramEventTableNames';
+import _ from 'underscore';
 
 class EventMapper extends Component {
   constructor() {
@@ -89,7 +90,11 @@ class EventMapper extends Component {
                   dispatch={this.props.dispatch}
                   columns={this.props.columns[e]}
                   mappingJson={this.props.mappingJson[e]}
-                  category={`events ${e}`}
+                  category={
+                    _.get(this, "props.isPatientMapping", false)
+                      ? "instance"
+                      : "events"
+                  }
                   dhisMappingHeader="DHIS2 Data Element"
                   mappingConfig={{}}
                 />
