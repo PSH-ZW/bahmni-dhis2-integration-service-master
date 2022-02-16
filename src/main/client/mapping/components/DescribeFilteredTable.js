@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import {
   currentMapping,
   dhisStageId,
@@ -12,23 +12,35 @@ import {
   saveMappings,
   selectedEnrollmentsTable,
   selectedEventTable,
-  selectedInstanceTable
-} from '../actions/MappingActions';
-import Message from '../../common/Message';
-import Spinner from '../../common/Spinner';
-import { showHome } from '../../common/Actions';
-import InstanceMapper from './InstanceMapper';
-import EnrollmentMapper from './EnrollmentMapper';
-import EventMapper from './EventMapper';
+  selectedInstanceTable,
+} from "../actions/MappingActions";
+import Message from "../../common/Message";
+import Spinner from "../../common/Spinner";
+import { showHome } from "../../common/Actions";
+import InstanceMapper from "./InstanceMapper";
+import EnrollmentMapper from "./EnrollmentMapper";
+import EventMapper from "./EventMapper";
+import DisplayOptions from "./DisplayOptions";
+import _ from "underscore";
+import Ajax from "../../common/Ajax";
+import { filterOptions } from "../../utils/MappingUtil";
 
 class DescribeFilteredTable extends Component {
   constructor() {
     super();
     this._onCancel = this._onCancel.bind(this);
     this._onSave = this._onSave.bind(this);
-    this._setOpenLatestCompletedEnrollment = this._setOpenLatestCompletedEnrollment.bind(this);
+    this._setOpenLatestCompletedEnrollment =
+      this._setOpenLatestCompletedEnrollment.bind(this);
+    this.getStageIds = this.getStageIds.bind(this);
+    this.onOptionSelect = this.onOptionSelect.bind(this);
+    this.updateOptions = this.updateOptions.bind(this);
+
     this.state = {
-      openLatestCompletedEnrollment: '',
+      openLatestCompletedEnrollment: "",
+      dhisStageIdOptions: [],
+      dhisStageIdOptionsFiltered: [],
+      dhisStageId: null,
     };
   }
 
@@ -41,10 +53,27 @@ class DescribeFilteredTable extends Component {
       this.refs.dhisStageId.value = this.props.dhisStageId;
     }
     this.props.dispatch(getTables());
+    this.getStageIds();
+  }
+
+  async getStageIds() {
+    const ajax = Ajax.instance();
+    try {
+      const url = "/dhis-integration/api/getProgramStages";
+      const response = await ajax.get(url);
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          dhisStageIdOptions: response,
+        };
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('nxtprops', nextProps);
+    console.log("nxtprops", nextProps);
     if (nextProps.dhisStageId) {
       this.refs.dhisStageId.value = nextProps.dhisStageId;
     }
@@ -68,28 +97,15 @@ class DescribeFilteredTable extends Component {
     this.props.dispatch(mappingJson());
     this.props.dispatch(mappingConfig());
     this.props.dispatch(dhisStageIdAction());
-    this.props.history.push('/dhis-integration/mapping');
+    this.props.history.push("/dhis-integration/mapping");
   }
 
   _onSave() {
     const mappingName = this.refs.mappingName.value;
     const mappings = {};
-    mappings.instance = document.getElementsByClassName('instance');
+    mappings.instance = document.getElementsByClassName("instance");
     const formTableMappings = this.props.allMappingJson;
-    // for (let j = 0; j < this.props.selectedEventTable.length; j++) {
-    //   const formName = this.props.selectedEventTable[j];
-    //   const elementsObj = {};
-    //   if (formName.length > 0) {
-    //     this.props.columns[formName].map((e) => {
-    //       const elmnt = document.getElementsByClassName(`${formName} ${e}`)[0];
-    //       elementsObj[e] = elmnt.value;
-    //     });
-    //   }
-
-    //   formTableMappings[formName] = elementsObj;
-    // }
-    const dhisProgramStageId =
-      document.getElementsByClassName("dhis-stage-id")[0].value;
+    const dhisProgramStageId =this.state.dhisStageId.id;
     const payload = {
       formTableMappings,
       dhisProgramStageId,
@@ -109,6 +125,39 @@ class DescribeFilteredTable extends Component {
         this.state.openLatestCompletedEnrollment
       )
     );
+  }
+
+  onOptionSelect(val) {
+    console.log("dhisstageid", val);
+    this.refs.dhisStageId.value = val.id;
+    this.setState((prevState) => {
+      return {
+        ...prevState,
+        dhisStageIdOptionsFiltered: [],
+        dhisStageId: val,
+      };
+    });
+    this.forceUpdate();
+  }
+  updateOptions(e1) {
+    let newOptions = [];
+    const enteredText = e1.target.value;
+    if (enteredText !== "") {
+      newOptions = filterOptions(enteredText, this.state.dhisStageIdOptions);
+      this.setState(
+        (prevState) => {
+          return {
+            ...prevState,
+            dhisStageIdOptionsFiltered: newOptions,
+          };
+        },
+        () => {
+          this.forceUpdate();
+        }
+      );
+    } else {
+      this.onOptionSelect(null);
+    }
   }
 
   render() {
@@ -131,11 +180,30 @@ class DescribeFilteredTable extends Component {
         />
         <br />
         <div>DHIS Program Stage ID</div>
-        <input
+        {/* <input
           type="text"
           ref="dhisStageId"
           className="dhis-stage-id dhis-stage-id-input mapping-name-input"
           placeholder="Enter DHIS Program Stage ID"
+        /> */}
+        <input
+          type="text"
+          name="dhisStageId"
+          placeholder="Enter DHIS Program Stage ID"
+          onKeyUp={this.updateOptions}
+          className="dhis-stage-id dhis-stage-id-input mapping-name-input"
+          ref="dhisStageId"
+          autocomplete="off"
+        />
+        <DisplayOptions
+          options={_.get(this.state, "dhisStageIdOptionsFiltered", [])}
+          dispatch={this.props.dispatch}
+          category="events"
+          filteredTablesAction={(val) => {
+            this.onOptionSelect(val);
+          }}
+          selectedTable="dfhf"
+          maxWidth="350px"
         />
 
         <EventMapper />
@@ -163,7 +231,7 @@ DescribeFilteredTable.propTypes = {
   history: PropTypes.object.isRequired,
   hideSpinner: PropTypes.bool.isRequired,
   currentMapping: PropTypes.string.isRequired,
-  columns: PropTypes.array.isRequired
+  columns: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -176,6 +244,5 @@ const mapStateToProps = (state) => ({
   dhisStageId: state.dhisStageId,
   allMappingJson: state.mappingJson,
 });
-
 
 export default connect(mapStateToProps)(DescribeFilteredTable);

@@ -1,3 +1,5 @@
+import _ from "underscore";
+
 export function filterTables(searchText, tables) {
   if (searchText.length < 3) {
     return [];
@@ -9,13 +11,13 @@ export function filterTables(searchText, tables) {
   );
 }
 
-export function filterOptions(searchText, options) {
+export function filterOptions(searchText, options, key = "displayName") {
   // if (searchText.length < 1) {
   //   return [];
   // }
   const searchTextInLowerCase = searchText.toLowerCase();
   return options.filter((option) => {
-    const optionValue = option["displayName"];
+    const optionValue = _.get(option, key);
     return optionValue.toLowerCase().includes(searchTextInLowerCase);
   });
 }

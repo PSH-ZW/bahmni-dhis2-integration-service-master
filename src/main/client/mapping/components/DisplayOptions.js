@@ -44,12 +44,15 @@ export default class DisplayOptions extends Component {
         <ul
           type="none"
           className="filtered-tables"
-          style={{ minWidth: "500px" }}
+          style={{
+            maxWidth: this.props.maxWidth ? this.props.maxWidth : "500px",
+          }}
         >
           {this.props &&
             this.props.options &&
             this.props.options.length > 0 &&
             this.getListItems()}
+          {JSON.stringify(this.props.style)}
         </ul>
       </div>
     );
@@ -60,5 +63,5 @@ DisplayOptions.propTypes = {
   options: PropTypes.array.isRequired,
   dispatch: PropTypes.func.isRequired,
   filteredTablesAction: PropTypes.func.isRequired,
-  selectedTable: PropTypes.string.isRequired,
+  maxWidth: PropTypes.string,
 };
