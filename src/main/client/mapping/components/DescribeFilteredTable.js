@@ -7,6 +7,7 @@ import {
   dhisStageIdAction,
   getMapping,
   getTables,
+  isObjectValidAndNotEmpty,
   mappingConfig,
   mappingJson,
   saveMappings,
@@ -50,9 +51,6 @@ class DescribeFilteredTable extends Component {
     if (mappingName) {
       this.props.dispatch(getMapping(mappingName, this.props.history));
       this.refs.mappingName.value = mappingName;
-      if(_.get(this, "props.allMappingJson.isPatientMapping", false)) {
-        this.refs.dhisStageId.value = this.props.dhisStageId;
-      }
     }
     this.props.dispatch(getTables());
     this.getStageIds();
@@ -76,11 +74,12 @@ class DescribeFilteredTable extends Component {
 
   componentWillReceiveProps(nextProps) {
     console.log("nxtprops", nextProps);
-    if (
-      nextProps.dhisStageId &&
-      _.get(this, "props.allMappingJson.isPatientMapping", false)
-    ) {
-      this.refs.dhisStageId.value = nextProps.dhisStageId;
+    const obj = _.get(this, ["props", "mappingJsnData", "dhisProgramStageId"]);
+    if (nextProps.dhisStageId !== obj) {
+      if (isObjectValidAndNotEmpty(obj)) {
+        this.refs.dhisStageId.value = `${obj.displayName} (${obj.id})`;
+      }
+
     }
   }
 
@@ -110,11 +109,12 @@ class DescribeFilteredTable extends Component {
     const mappings = {};
     mappings.instance = document.getElementsByClassName("instance");
     const formTableMappings = this.props.allMappingJson;
-    const dhisProgramStageId =_.get(this, 'state.dhisStageId.id', _.get(this, 'refs.dhisStageId.value'));
+    const dhisProgramStageId = _.get(this, ["props", "mappingJsnData", "dhisProgramStageId"]);
     const payload = {
       formTableMappings,
       dhisProgramStageId,
       config: mappingConfig,
+      isPatientMapping:_.get(this, ['props','mappingJsnData','isPatientMapping'], false)
     };
     const lookupTable = {
       instance: this.props.selectedInstanceTable,
@@ -179,7 +179,7 @@ class DescribeFilteredTable extends Component {
           placeholder="Enter Mapping Name"
         />
         <br />
-        {!_.get(this, "props.mappingJsnData.isPatientMapping", false) && (
+        {!_.get(this, ['props','mappingJsnData','isPatientMapping'], false) && (
           <React.Fragment>
             <EnrollmentMapper
               setOpenLatestCompletedEnrollment={

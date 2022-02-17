@@ -157,7 +157,7 @@ class ColumnMappingsAutocomplete extends Component {
             }}
             className={`${this.props.name} ${column}`}
             ref={column}
-            style={{ minWidth: "500px" }}
+            style={{ minWidth: "500px"}}
             autocomplete="off"
           />
           <DisplayOptions

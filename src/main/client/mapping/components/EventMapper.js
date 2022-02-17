@@ -61,8 +61,12 @@ class EventMapper extends Component {
           this.props.selectedTable.map((e, indx) => {
             console.log(e);
             return (
-              <div style={{ marginTop: "5em" }}>
-                <span>Please select program events table</span>
+              <div style={{ marginTop: "2em" }}>
+                <span>
+                  {
+                    _.get(this, ['props','mappingJsnData','isPatientMapping'], false) ? 'Please select patients table' : 'Please select program events table'
+                  }
+                  </span>
                 <input
                   autocomplete="off"
                   type="text"
@@ -74,6 +78,10 @@ class EventMapper extends Component {
                   }}
                   className="table-input"
                 />
+                {/* {JSON.stringify(this.props.mappingJsnData)}
+                {
+                  _.get(this, ['props','mappingJsnData','isPatientMapping'], false) ? 'true' : 'false'
+                } */}
                 <DisplayProgramEventTableNames
                   index={indx}
                   filteredTables={this.state.filteredTables[indx]}
@@ -91,7 +99,7 @@ class EventMapper extends Component {
                   columns={this.props.columns[e]}
                   mappingJson={this.props.mappingJson[e]}
                   category={
-                    _.get(this, "props.isPatientMapping", false)
+                    _.get(this, ['props','mappingJsnData','isPatientMapping'], false)
                       ? "instance"
                       : "events"
                   }
@@ -115,6 +123,7 @@ EventMapper.propTypes = {
   tables: PropTypes.array.isRequired,
   columns: PropTypes.object.isRequired,
   mappingJson: PropTypes.array.isRequired,
+  mapingJsnData: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -122,6 +131,7 @@ const mapStateToProps = (state) => ({
   tables: state.allTables,
   columns: state.selectedEventTableColumns,
   mappingJson: state.mappingJson,
+  mappingJsnData: state.mappingJsnData,
   state,
 });
 

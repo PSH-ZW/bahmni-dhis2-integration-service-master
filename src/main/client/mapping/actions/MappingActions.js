@@ -234,7 +234,7 @@ export function saveMappings(mappingName = '', allMappings, lookupTable, history
     dispatch(showMessage("Please provide a program events table name", "error"));
   } else if (mappingNameIsNotUnique(state, mappingName)) {
     dispatch(showMessage("Please provide unique mapping name", "error"));
-  } else if (!mappingObj.dhisProgramStageId && allMappings.isPatientMapping) {
+  } else if (!mappingObj.dhisProgramStageId && !_.get(allMappings, 'isPatientMapping', false)) {
     dispatch(showMessage("Please provide Dhis Program Stage Id", "error"));
   } else if (hasNoMappings(allMappings)) {
     dispatch(
