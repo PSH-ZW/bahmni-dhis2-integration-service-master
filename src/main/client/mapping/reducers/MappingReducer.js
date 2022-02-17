@@ -110,6 +110,15 @@ export function mappingJson(state = {}, action = {}) {
   }
 }
 
+export function mappingJsnData(state = {}, action = {}) {
+  switch (action.type) {
+    case "mappingJsonData":
+      return action.mappingJsonData;
+    default:
+      return state;
+  }
+}
+
 export function mappingConfig(state = { searchable: [], comparable: [], openLatestCompletedEnrollment: '' }, action = {}) {
   switch (action.type) {
     case 'mappingConfig':

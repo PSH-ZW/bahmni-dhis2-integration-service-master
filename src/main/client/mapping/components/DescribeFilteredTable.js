@@ -179,7 +179,7 @@ class DescribeFilteredTable extends Component {
           placeholder="Enter Mapping Name"
         />
         <br />
-        {_.get(this, "props.allMappingJson.isPatientMapping", false) && (
+        {!_.get(this, "props.mappingJsnData.isPatientMapping", false) && (
           <React.Fragment>
             <EnrollmentMapper
               setOpenLatestCompletedEnrollment={
@@ -236,6 +236,7 @@ DescribeFilteredTable.propTypes = {
   hideSpinner: PropTypes.bool.isRequired,
   currentMapping: PropTypes.string.isRequired,
   columns: PropTypes.array.isRequired,
+  mappingJsnData: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -247,6 +248,7 @@ const mapStateToProps = (state) => ({
   columns: state.selectedEventTableColumns,
   dhisStageId: state.dhisStageId,
   allMappingJson: state.mappingJson,
+  mappingJsnData: state.mappingJsnData,
 });
 
 export default connect(mapStateToProps)(DescribeFilteredTable);

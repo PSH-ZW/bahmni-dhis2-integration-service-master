@@ -13,6 +13,7 @@ import {
   selectedInstanceTableColumns,
   setDhisStageId,
   initialSelectedEventTable,
+  mappingJsnData,
 } from "./mapping/reducers/MappingReducer";
 
 import { mappingNames, syncDetails } from './sync/reducers/SyncReducer';
@@ -50,6 +51,7 @@ const reducers = combineReducers({
   noFilterEventsToDisplay,
   dhisStageId: setDhisStageId,
   initialSelectedEventTable,
+  mappingJsnData,
 });
 
 export default reducers;

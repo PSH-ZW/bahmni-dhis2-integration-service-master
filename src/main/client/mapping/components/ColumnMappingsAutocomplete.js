@@ -170,7 +170,7 @@ class ColumnMappingsAutocomplete extends Component {
             selectedTable="dfhf"
           />
         </td>
-        <td className="mapping-data-element" style={{textAlign:'center'}}>
+        <td className="mapping-data-element" style={{ textAlign: "center" }}>
           {_.get(this, ["props", "mappingJson", column, "id"])}
         </td>
 

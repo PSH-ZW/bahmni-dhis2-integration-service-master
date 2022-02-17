@@ -52,7 +52,6 @@ export default class DisplayOptions extends Component {
             this.props.options &&
             this.props.options.length > 0 &&
             this.getListItems()}
-          {JSON.stringify(this.props.style)}
         </ul>
       </div>
     );

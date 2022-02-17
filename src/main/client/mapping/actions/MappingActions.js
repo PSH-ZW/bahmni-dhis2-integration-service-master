@@ -79,7 +79,12 @@ export function currentMapping(mappingName = '') {
     mappingName
   };
 }
-
+export function mappingJsnData(mappingJsonData = {}) {
+  return {
+    type: "mappingJsonData",
+    mappingJsonData,
+  };
+}
 export function mappingJson(mappingJson = {}) {
   return {
     type: 'mappingJson',
@@ -294,6 +299,7 @@ export function getMapping(mappingNameToEdit, history) {
       const mappingJsonData = JSON.parse(response.mapping_json.value);
       const dhisStageId = _.get(mappingJsonData, "dhisProgramStageId", "");
       const tableNames = Object.keys(mappingJsonData.formTableMappings);
+      dispatch(mappingJsnData(mappingJsonData));
       dispatch(
         mappingJson(mappingJsonData.formTableMappings)
       );
