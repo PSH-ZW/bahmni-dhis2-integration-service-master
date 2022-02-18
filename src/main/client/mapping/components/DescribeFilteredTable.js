@@ -9,6 +9,7 @@ import {
   getTables,
   isObjectValidAndNotEmpty,
   mappingConfig,
+  mappingJsnData,
   mappingJson,
   saveMappings,
   selectedEnrollmentsTable,
@@ -101,6 +102,7 @@ class DescribeFilteredTable extends Component {
     this.props.dispatch(mappingJson());
     this.props.dispatch(mappingConfig());
     this.props.dispatch(dhisStageIdAction());
+    this.props.dispatch(mappingJsnData({}));
     this.props.history.push("/dhis-integration/mapping");
   }
 
@@ -109,12 +111,26 @@ class DescribeFilteredTable extends Component {
     const mappings = {};
     mappings.instance = document.getElementsByClassName("instance");
     const formTableMappings = this.props.allMappingJson;
-    const dhisProgramStageId = _.get(this, ["props", "mappingJsnData", "dhisProgramStageId"]);
+    const filteredFormTableMappings = {};
+    Object.keys(formTableMappings).map((e1) => {
+        const filteredMappings = {};
+        Object.keys(formTableMappings[e1]).map((e2)=>{
+            if(formTableMappings[e1][e2]){
+              filteredMappings[e2] = formTableMappings[e1][e2];
+            };
+        });
+        filteredFormTableMappings[e1] = filteredMappings;
+    });
+    const dhisProgramStageId = _.get(this, ["props", "dhisStageId"], false);
     const payload = {
-      formTableMappings,
+      formTableMappings: filteredFormTableMappings,
       dhisProgramStageId,
       config: mappingConfig,
-      isPatientMapping:_.get(this, ['props','mappingJsnData','isPatientMapping'], false)
+      isPatientMapping: _.get(
+        this,
+        ["props", "mappingJsnData", "isPatientMapping"],
+        false
+      ),
     };
     const lookupTable = {
       instance: this.props.selectedInstanceTable,
@@ -143,6 +159,7 @@ class DescribeFilteredTable extends Component {
         dhisStageId: val,
       };
     });
+    this.props.dispatch(dhisStageIdAction(val));
     this.forceUpdate();
   }
   updateOptions(e1) {

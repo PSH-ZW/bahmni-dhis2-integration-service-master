@@ -209,7 +209,7 @@ function afterOnSaveMappingSuccessResponse(dispatch, response, history) {
   dispatch(selectedInstanceTable());
   dispatch(selectedEnrollmentsTable());
   dispatch(selectedEventTable());
-
+  dispatch(mappingJsnData({}));
   history.push('/dhis-integration/mapping');
 }
 
@@ -297,7 +297,7 @@ export function getMapping(mappingNameToEdit, history) {
       const ajax = Ajax.instance();
       const response = parseResponse(await ajax.get('/dhis-integration/api/getMapping', { mappingName: mappingNameToEdit }));
       const mappingJsonData = JSON.parse(response.mapping_json.value);
-      const dhisStageId = _.get(mappingJsonData, "dhisProgramStageId", "");
+      const dhisStageId = _.get(mappingJsonData, "dhisProgramStageId", {});
       const tableNames = Object.keys(mappingJsonData.formTableMappings);
       dispatch(mappingJsnData(mappingJsonData));
       dispatch(
