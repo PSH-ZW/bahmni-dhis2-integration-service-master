@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ColumnMappings from './ColumnMappings';
 import DisplayTableNames from './DisplayTableNames';
 import { filterTables } from '../../utils/MappingUtil';
-import { selectedEventTable } from '../actions/MappingActions';
+import { mappingJson, selectedEventTable } from '../actions/MappingActions';
 import ColumnMappingsAutocomplete from './ColumnMappingsAutocomplete';
 import DisplayProgramEventTableNames from './DisplayProgramEventTableNames';
 import _ from 'underscore';
@@ -14,6 +14,7 @@ class EventMapper extends Component {
     super();
     this.updateFilteredTables = this.updateFilteredTables.bind(this);
     this._onAdd = this._onAdd.bind(this);
+    this._insertSearchFieldValues = this._insertSearchFieldValues.bind(this);
     this.state = {
       filteredTables: {},
     };
@@ -31,8 +32,18 @@ class EventMapper extends Component {
         },
       };
     });
-    this.props.selectedTable[indx] = e.target.value;
-    this.props.dispatch(selectedEventTable(this.props.selectedTable));
+    if(enteredText){
+      this.props.selectedTable[indx] = e.target.value;
+      this.props.dispatch(selectedEventTable(this.props.selectedTable));
+    } else {
+      const tbName = this.props.selectedTable[indx];
+      const mappingJsn = this.props.mappingJson
+      delete mappingJsn[tbName]
+      this.props.dispatch(mappingJson(mappingJsn),  ()=>{this.forceUpdate();});
+
+      const tables = this.props.selectedTable.filter(e=>e!==tbName);
+      this.props.dispatch(selectedEventTable(tables), ()=>{this.forceUpdate();this._insertSearchFieldValues();});
+    }
   }
 
   _onAdd() {
@@ -45,7 +56,7 @@ class EventMapper extends Component {
     this.forceUpdate();
   }
 
-  render() {
+  _insertSearchFieldValues(){
     if (this.props && this.props.selectedTable) {
       this.props.selectedTable.map((e, indx) => {
         if (this.refs[`tablesSearch${e}`]) {
@@ -53,9 +64,16 @@ class EventMapper extends Component {
         }
       });
     }
+  }
 
+  render() {
+    this._insertSearchFieldValues();
     return (
       <div className="mapper">
+        {/* {this.props &&
+          this.props.selectedTable &&
+          JSON.stringify(this.props.selectedTable)}
+        {JSON.stringify(this.props.mappingJson, null, 2)} */}
         {this.props &&
           this.props.selectedTable &&
           this.props.selectedTable.map((e, indx) => {
@@ -63,10 +81,14 @@ class EventMapper extends Component {
             return (
               <div style={{ marginTop: "2em" }}>
                 <span>
-                  {
-                    _.get(this, ['props','mappingJsnData','isPatientMapping'], false) ? 'Please select patients table' : 'Please select program events table'
-                  }
-                  </span>
+                  {_.get(
+                    this,
+                    ["props", "mappingJsnData", "isPatientMapping"],
+                    false
+                  )
+                    ? "Please select patients table"
+                    : "Please select program events table"}
+                </span>
                 <input
                   autocomplete="off"
                   type="text"
@@ -99,7 +121,11 @@ class EventMapper extends Component {
                   columns={this.props.columns[e]}
                   mappingJson={this.props.mappingJson[e]}
                   category={
-                    _.get(this, ['props','mappingJsnData','isPatientMapping'], false)
+                    _.get(
+                      this,
+                      ["props", "mappingJsnData", "isPatientMapping"],
+                      false
+                    )
                       ? "instance"
                       : "events"
                   }

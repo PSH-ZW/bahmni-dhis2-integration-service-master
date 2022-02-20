@@ -374,7 +374,7 @@ async function dispatchEventTableDetails(tableNames, dispatch, ajax) {
 }
 
 async function dispatchTableDetails(tableName, category, dispatch, ajax) {
-  dispatch(mappingJson());
+  // dispatch(mappingJson());
 
   if (category === 'instance') {
     await dispatchInstanceTableDetails(tableName, dispatch, ajax);
