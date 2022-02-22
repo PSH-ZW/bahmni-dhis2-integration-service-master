@@ -16,10 +16,9 @@ public class SyncDataDAOImpl implements SyncDataDAO {
 
     @Override
     public List<Map<String, Object>> getEventsLeftToSync() {
-        //TODO: the where condition for type_name can be removed once that column is removed from events_left_to_sync
         // also need to add exception handling.
         String sql = "select program_id, count(*) events_left_to_sync from events_to_sync where synced = false " +
-                "and type_name = 'encounter' group by program_id order by program_id;";
+                " group by program_id order by program_id;";
         return jdbcTemplate.queryForList(sql);
     }
 }
