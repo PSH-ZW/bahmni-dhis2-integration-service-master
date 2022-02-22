@@ -149,9 +149,8 @@ class DescribeFilteredTable extends Component {
     );
   }
 
-  onOptionSelect(val) {
+  async onOptionSelect(val) {
     console.log("dhisstageid", val);
-    this.refs.dhisStageId.value = `${val.displayName} (${val.id})`;
     this.setState((prevState) => {
       return {
         ...prevState,
@@ -159,8 +158,13 @@ class DescribeFilteredTable extends Component {
         dhisStageId: val,
       };
     });
-    this.props.dispatch(dhisStageIdAction(val));
+    await this.props.dispatch(dhisStageIdAction(val));
     this.forceUpdate();
+    if(!val){
+      this.refs.dhisStageId.value = '';
+    } else {
+      this.refs.dhisStageId.value = `${val.displayName} (${val.id})`;
+    }
   }
   updateOptions(e1) {
     let newOptions = [];
