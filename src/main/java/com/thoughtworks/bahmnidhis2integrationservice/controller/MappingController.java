@@ -38,10 +38,8 @@ public class MappingController {
                 params.get("config"),
                 params.get("currentMapping"),
                 params.get("user"));
-        markerService.createEntriesForNewService(params.get("currentMapping"), params.get("mappingName"));
 
         Map<String, String> responseObj = new HashMap<>();
-
         responseObj.put("data", response);
 
         return responseObj;
