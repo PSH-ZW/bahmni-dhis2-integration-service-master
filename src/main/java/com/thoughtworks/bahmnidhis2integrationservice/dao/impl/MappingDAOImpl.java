@@ -92,6 +92,7 @@ public class MappingDAOImpl implements MappingDAO {
 
     private String getMappingSql(String mappingName, String lookupTable, String mappingJson, String config, String currentMapping, String user) {
         String currentTime = getCurrentTime();
+        mappingJson = mappingJson.replace("'", "''"); //replace ' with '' . otherwise postgres will throw error for dhis elements names like "user's id" etc.
         return StringUtils.isEmpty(currentMapping) ?
                 String.format("INSERT INTO mapping (program_name, lookup_table, mapping_json, config, created_by, date_created) " +
                         "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');", mappingName, lookupTable, mappingJson, config, user, currentTime)
