@@ -167,7 +167,7 @@ public class LoggerDAOImplTest {
         when(DateUtil.getDateStringInUTC(serverDate, zoneId)).thenReturn(utcDate);
         when(DateUtil.getDateStringInUTC("2018-11-01 16:00:00", zoneId)).thenReturn("2018-11-01 14:00:00");
 
-        List<Map<String, Object>> actualResults = loggerDAO.getLogs(utcDate, "", "", true, 0, true);
+        List<Map<String, Object>> actualResults = loggerDAO.getLogs(utcDate, "", "", true, 0, true, "");
 
         verifyStatic();
         ZonedDateTime.now();
@@ -224,7 +224,7 @@ public class LoggerDAOImplTest {
         when(DateUtil.getDateStringInUTC(serverDate, zoneId)).thenReturn(utcDate);
         when(DateUtil.getDateStringInUTC("2018-11-01 14:00:00", zoneId)).thenReturn("2018-11-01 12:00:00");
 
-        List<Map<String, Object>> actualResults = loggerDAO.getLogs(utcDate, "", "", false, 0, onLoad);
+        List<Map<String, Object>> actualResults = loggerDAO.getLogs(utcDate, "", "", false, 0, onLoad, "");
 
         verifyStatic();
         ZonedDateTime.now();
@@ -282,7 +282,7 @@ public class LoggerDAOImplTest {
         when(DateUtil.getDateStringInUTC(serverDate, zoneId)).thenReturn(utcDate);
         when(DateUtil.getDateStringInUTC("2018-11-01 16:00:00", zoneId)).thenReturn("2018-11-01 14:00:00");
 
-        List<Map<String, Object>> actualResults = loggerDAO.getLogs(utcDate, user, "", true, 0, onLoad);
+        List<Map<String, Object>> actualResults = loggerDAO.getLogs(utcDate, user, "", true, 0, onLoad, "");
 
         verifyStatic();
         ZonedDateTime.now();
@@ -341,7 +341,7 @@ public class LoggerDAOImplTest {
         when(DateUtil.getDateStringInUTC(serverDate, zoneId)).thenReturn(utcDate);
         when(DateUtil.getDateStringInUTC("2018-11-01 16:00:00", zoneId)).thenReturn("2018-11-01 14:00:00");
 
-        List<Map<String, Object>> actualResults = loggerDAO.getLogs(utcDate, user, programName, true, 0, onLoad);
+        List<Map<String, Object>> actualResults = loggerDAO.getLogs(utcDate, user, programName, true, 0, onLoad, "");
 
         verifyStatic();
         ZonedDateTime.now();
@@ -398,7 +398,7 @@ public class LoggerDAOImplTest {
         when(DateUtil.getDateStringInUTC(serverDate, zoneId)).thenReturn(utcDate);
         when(DateUtil.getDateStringInUTC("2018-11-01 16:00:00", zoneId)).thenReturn("2018-11-01 14:00:00");
 
-        List<Map<String, Object>> actualResults = loggerDAO.getLogs(utcDate, "", "", true, 0, false);
+        List<Map<String, Object>> actualResults = loggerDAO.getLogs(utcDate, "", "", true, 0, false, "");
 
         verifyStatic();
         ZonedDateTime.now();

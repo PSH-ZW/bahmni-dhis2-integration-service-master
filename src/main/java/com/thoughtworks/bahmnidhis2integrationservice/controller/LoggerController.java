@@ -25,7 +25,8 @@ public class LoggerController {
                                              @RequestParam String service,
                                              @RequestParam boolean getAbove,
                                              @RequestParam int logId,
-                                             @RequestParam boolean onLoad){
-        return loggerService.getLogs(date, user, service, getAbove, logId, onLoad);
+                                             @RequestParam boolean onLoad,
+                                             @RequestParam String category){
+        return loggerService.getLogs(date, user, service, getAbove, logId, onLoad, category);
     }
 }

@@ -69,11 +69,11 @@ public class LoggerServiceImplTest {
         expRow2.put("program_name", "HT Service");
         List<Map<String, Object>> expResults = Arrays.asList(expRow1, expRow2);
 
-        when(loggerDAO.getLogs(date, "", "", true, 0, onLoad)).thenReturn(expResults);
+        when(loggerDAO.getLogs(date, "", "", true, 0, onLoad, "")).thenReturn(expResults);
 
-        List<Map<String, Object>> actualResults = loggerService.getLogs(date, "", "", true, 0, onLoad);
+        List<Map<String, Object>> actualResults = loggerService.getLogs(date, "", "", true, 0, onLoad, "");
 
-        verify(loggerDAO, times(1)).getLogs(date, "", "", true, 0, onLoad);
+        verify(loggerDAO, times(1)).getLogs(date, "", "", true, 0, onLoad, "");
 
         assertEquals(expResults, actualResults);
     }

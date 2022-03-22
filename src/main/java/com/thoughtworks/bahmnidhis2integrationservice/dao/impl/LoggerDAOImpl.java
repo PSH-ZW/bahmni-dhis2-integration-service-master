@@ -25,10 +25,10 @@ public class LoggerDAOImpl {
     private static final String EMPTY_STATUS = "";
 
 
-    public List<Map<String, Object>> getLogs(String date, String user, String service, boolean getAbove, int logId, boolean onLoad) {
+    public List<Map<String, Object>> getLogs(String date, String user, String service, boolean getAbove, int logId, boolean onLoad, String category) {
         ZoneId zoneId = ZonedDateTime.now().getZone();
         String serverDate = getDateStringInLocalFromUtc(date, zoneId);
-        String sql = String.format(getSql(getAbove, onLoad), serverDate, user, service, logId);
+        String sql = String.format(getSql(getAbove, onLoad), serverDate, user, service, logId, category);
 
         List<Map<String, Object>> logs = jdbcTemplate.queryForList(sql);
         changeDateToUtc(logs, zoneId);
@@ -81,6 +81,7 @@ public class LoggerDAOImpl {
                 "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
                 "AND upper(program) LIKE upper('%%%s%%')\n" +
                 "AND log_id > %s\n" +
+                "AND category = %s\n" +
                 "ORDER BY log_id ASC LIMIT 10;";
     }
 
@@ -91,6 +92,7 @@ public class LoggerDAOImpl {
                 "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
                 "AND upper(program) LIKE upper('%%%s%%')\n" +
                 "AND log_id < %s\n" +
+                "AND category = %s\n" +
                 "ORDER BY log_id DESC LIMIT 10;";
     }
 
@@ -101,6 +103,8 @@ public class LoggerDAOImpl {
                 "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
                 "AND upper(program) LIKE upper('%%%s%%')\n" +
                 "AND log_id > %s\n" +
+                "AND category = %s\n" +
                 "ORDER BY log_id DESC LIMIT 10;";
     }
+
 }

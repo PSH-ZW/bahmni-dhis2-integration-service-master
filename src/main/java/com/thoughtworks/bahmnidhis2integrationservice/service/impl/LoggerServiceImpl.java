@@ -13,8 +13,8 @@ public class LoggerServiceImpl {
     @Autowired
     private LoggerDAOImpl loggerDAO;
 
-    public List<Map<String, Object>> getLogs(String date, String user, String service, boolean getAbove, int logId, boolean onLoad) {
-        return loggerDAO.getLogs(date, user, service, getAbove, logId, onLoad);
+    public List<Map<String, Object>> getLogs(String date, String user, String service, boolean getAbove, int logId, boolean onLoad, String category) {
+        return loggerDAO.getLogs(date, user, service, getAbove, logId, onLoad, category);
     }
 
     public String getSyncDateForService(String mappingName) {
@@ -24,4 +24,9 @@ public class LoggerServiceImpl {
     public String getLatestSyncStatus(String mappingName) {
         return loggerDAO.getLatestSyncStatus(mappingName);
     }
+
+//    public List<Map<String, Object>> getAnalyticsLogs(String date, String user, String service, boolean getAbove,
+//                                                      int logId, boolean onLoad, String category) {
+//        return loggerDAO.getAnalyticsLogs(date, user, getAbove, logId, onLoad, category);
+//    }
 }
