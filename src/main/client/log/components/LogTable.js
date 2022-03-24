@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { displayHeaderNames } from '../../common/constants';
+import { analyticsDisplayHeaderNames, API, displayHeaderNames, syncDisplayHeaderNames } from '../../common/constants';
 import {
   getLogs, getUtcFromLocal, getLocalFromUtc, filterValues, logs
 } from '../actions/LogActions';
@@ -13,14 +13,23 @@ class LogTable extends Component {
     this.renderTableHeader = this.renderTableHeader.bind(this);
     this.renderTableData = this.renderTableData.bind(this);
     this.renderValues = this.renderValues.bind(this);
+    this.state = {
+      analytics: false,
+    };
   }
 
   componentDidMount() {
+    const locList = window.location.href.split("/");
+    const analytics = locList.slice(-1)[0] === 'analyticslogs'
+    this.setState({
+      analytics,
+    });
     const date = moment(new Date()).format('YYYY-MM-DD');
     const time = moment('12:00 AM', 'hh:mm A', true).format('HH:mm:ss');
     const dateTime = `${date} ${time}`;
+    const api = analytics ? API.ANALYTICS_LOGS : API.SYNC_LOGS;
     this.props.dispatch(filterValues(dateTime));
-    this.props.dispatch(getLogs(getUtcFromLocal(dateTime)));
+    this.props.dispatch(getLogs(getUtcFromLocal(dateTime), '', '', api));
   }
 
   componentWillUnmount() {
@@ -31,16 +40,25 @@ class LogTable extends Component {
     const { logs } = this.props;
     const keys = logs.length > 0 ? Object.keys(logs[0]) : [];
     const keysWithoutLogId = keys.filter(key => {
+      // return key !== 'log_id' && !(this.state.analytics && key === 'status');
       return key !== 'log_id';
     });
+    const headers = this.state.analytics ? analyticsDisplayHeaderNames : syncDisplayHeaderNames;
     return keysWithoutLogId.map(header => (
-      <th key={displayHeaderNames[header]} className="log-header">
-        {displayHeaderNames[header]}
+      <th key={headers[header]} className="log-header">
+        {headers[header]}
       </th>
     ));
   }
 
   renderTableData() {
+    // const logs = this.props.logs.map(log => {
+    //   const newLog = { ...log};
+    //   if(this.state.analytics){
+    //     delete newLog.status;
+    //   }
+    //   return newLog;
+    // })
     return this.props.logs.map(obj => (
       <tr className="log-row">
         {this.renderValues(obj)}

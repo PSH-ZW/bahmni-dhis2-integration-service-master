@@ -6,6 +6,8 @@ import moment from 'moment';
 import { getLogsOnFilter, filterValues, getUtcFromLocal } from '../actions/LogActions';
 import { showMessage } from '../../common/Actions';
 import Message from '../../common/Message';
+import _ from 'underscore';
+import { API } from '../../common/constants';
 
 class LogFilters extends React.Component {
   constructor() {
@@ -20,7 +22,8 @@ class LogFilters extends React.Component {
       time: new Date(),
       disableButton: false,
       enteredDate: new Date(),
-      enteredTime: new Date()
+      enteredTime: new Date(),
+      analytics: false,
     };
   }
 
@@ -52,12 +55,19 @@ class LogFilters extends React.Component {
 
   onFilterClick() {
     const service = this.refs.service.value;
-    const user = this.refs.user.value;
+    let status = '';
+    let user = '';
+    if(this.state.analytics){
+      status = this.refs.status.value;
+    } else {
+      user = this.refs.user.value;
+    }
     const formattedTime = `${this.state.time.getUTCHours()}:${this.state.time.getUTCMinutes()}:${this.state.time.getUTCSeconds()}`;
     const formattedDate = `${this.state.date.getFullYear()}-${this.state.date.getUTCMonth() + 1}-${this.state.date.getUTCDate()}`;
     const dateCreated = `${formattedDate} ${formattedTime}`;
-    this.props.dispatch(filterValues(dateCreated, service, user));
-    this.props.dispatch(getLogsOnFilter(dateCreated, service, user));
+    const api = this.state.analytics ? API.ANALYTICS_LOGS : API.SYNC_LOGS;
+    this.props.dispatch(filterValues(dateCreated, service, user, status));
+    this.props.dispatch(getLogsOnFilter(dateCreated, service, user, api, status));
   }
 
   validateDate(dateObj) {
@@ -92,7 +102,12 @@ class LogFilters extends React.Component {
       });
     }
   }
-
+  componentDidMount() {
+    const locList = window.location.href.split("/");
+    this.setState({
+      analytics: locList.slice(-1)[0] === 'analyticslogs',
+    });
+  }
   render() {
     return (
       <div className="filters">
@@ -127,10 +142,28 @@ class LogFilters extends React.Component {
           Service
         </span>
         <input className="filter-input" ref="service" />
-        <span className="filter-on">
-          Username
-        </span>
-        <input className="filter-input" ref="user" />
+        { !this.state.analytics && (
+            <React.Fragment>
+              <span className="filter-on">
+                Username
+              </span>
+              <input className="filter-input" ref="user" />
+            </React.Fragment>
+          )
+        }
+        { this.state.analytics && (
+            <React.Fragment>
+              <span className="filter-on">
+                Status
+              </span>
+              <select name="status" id="status" className="filter-input" ref="status">
+                <option selected value=""></option>
+                <option value="ERROR">Error</option>
+                <option value="INFO">Info</option>
+              </select>
+            </React.Fragment>
+          )
+        }
         <button type="submit" className="filter-button" onClick={this.onFilterClick} disabled={this.state.disableButton}>
           <i className="fa fa-filter" />
           Filter

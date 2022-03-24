@@ -24,7 +24,8 @@ export function routes() {
           component={MappingDashboard}
         />
         <Route exact path="/dhis-integration/sync" component={SyncDashboard} />
-        <Route exact path="/dhis-integration/logs" component={LogDashboard} />
+        <Route exact path="/dhis-integration/analyticslogs" component={LogDashboard} />
+        <Route exact path="/dhis-integration/synclogs" component={LogDashboard} />
         <Route
           exact
           path="/dhis-integration/mapping/new"

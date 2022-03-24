@@ -49,7 +49,7 @@ export const headingMessage = {
   events: 'data element mapping for program events'
 };
 
-export const displayHeaderNames = {
+export const syncDisplayHeaderNames = {
   log_id: 'LogId',
   program: 'Service',
   synced_by: 'Username',
@@ -60,3 +60,18 @@ export const displayHeaderNames = {
   status_info: 'Status Info',
   date_created: 'Sync Date',
 };
+export const analyticsDisplayHeaderNames = {
+  log_id: 'LogId',
+  program: 'Service',
+  synced_by: 'Username',
+  comments: 'Comments',
+  status: 'Status',
+  start_date: 'Start Date',
+  end_date: 'End Date',
+  status_info: 'Status Info',
+  date_created: 'Date',
+};
+export const API = {
+  SYNC_LOGS: '/dhis-integration/api/syncLogs',
+  ANALYTICS_LOGS: '/dhis-integration/api/analyticsLogs',
+}

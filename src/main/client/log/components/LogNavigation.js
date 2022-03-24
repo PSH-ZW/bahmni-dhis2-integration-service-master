@@ -2,22 +2,33 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getNextPageLogs, getPrevPageLogs, getUtcFromLocal } from '../actions/LogActions';
+import { API } from '../../common/constants';
 
 class LogNavigation extends Component {
   constructor(props) {
     super(props);
     this.onPrevPage = this.onPrevPage.bind(this);
     this.onNextPage = this.onNextPage.bind(this);
+    this.state = {
+      analytics: false,
+     };
   }
-
+  componentDidMount() {
+    const locList = window.location.href.split("/");
+    this.setState({
+      analytics: locList.slice(-1)[0] === 'analyticslogs',
+    });
+  }
   onPrevPage() {
     const { filters } = this.props;
-    this.props.dispatch(getPrevPageLogs(filters.date, filters.service, filters.user));
+    const api = this.state.analytics ? API.ANALYTICS_LOGS : API.SYNC_LOGS;
+    this.props.dispatch(getPrevPageLogs(filters.date, filters.service, filters.user, api));
   }
 
   onNextPage() {
     const { filters } = this.props;
-    this.props.dispatch(getNextPageLogs(filters.date, filters.service, filters.user));
+    const api = this.state.analytics ? API.ANALYTICS_LOGS : API.SYNC_LOGS;
+    this.props.dispatch(getNextPageLogs(filters.date, filters.service, filters.user, api));
   }
 
   render() {

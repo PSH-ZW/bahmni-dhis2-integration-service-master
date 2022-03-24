@@ -1,7 +1,7 @@
 import moment from 'moment';
 import Ajax from '../../common/Ajax';
 import { hideSpinner, showMessage } from '../../common/Actions';
-
+import { API } from '../../common/constants'
 export function logs(logs = []) {
   return {
     type: 'logs',
@@ -9,13 +9,14 @@ export function logs(logs = []) {
   };
 }
 
-export function filterValues(date, service = '', user = '') {
+export function filterValues(date, service = '', user = '', status = '') {
   return {
     type: 'filterOn',
     filter: {
       date,
       service,
-      user
+      user,
+      status,
     }
   };
 }
@@ -34,10 +35,10 @@ export function noFilterEventsToDisplay(noFilterEvents = false) {
   };
 }
 
-async function get(date, service, user, getAbove, logId, dispatch, onLoad = false) {
+async function get(date, service, user, getAbove, logId, dispatch, onLoad = false, api=API.ANALYTICS_LOGS) {
   const ajax = Ajax.instance();
   try {
-    const response = await ajax.get('/dhis-integration/api/logs', {
+    const response = await ajax.get(api, {
       date, service, user, getAbove, logId, onLoad
     });
     if (response.length > 0) {
@@ -54,22 +55,22 @@ async function get(date, service, user, getAbove, logId, dispatch, onLoad = fals
 }
 
 
-export function getLogs(date, service = '', user = '') {
+export function getLogs(date, service = '', user = '', api=API.ANALYTICS_LOGS) {
   return async dispatch => {
     dispatch(hideSpinner(false));
     const logId = 0;
-    await get(date, service, user, false, logId, dispatch, true);
+    await get(date, service, user, false, logId, dispatch, true, api);
   };
 }
 
-export function getLogsOnFilter(date, service = '', user = '') {
+export function getLogsOnFilter(date, service = '', user = '', api=API.ANALYTICS_LOGS, status='') {
   return async dispatch => {
     dispatch(hideSpinner(false));
     const ajax = Ajax.instance();
     const logId = 0;
     try {
-      const response = await ajax.get('/dhis-integration/api/logs', {
-        date, service, user, getAbove: true, logId, onLoad: true
+      const response = await ajax.get(api, {
+        date, service, user, getAbove: true, logId, onLoad: true, status,
       });
       if (response.length > 0) {
         dispatch(logs(response));
@@ -88,7 +89,7 @@ export function getLogsOnFilter(date, service = '', user = '') {
   };
 }
 
-export function getNextPageLogs(date, service = '', user = '') {
+export function getNextPageLogs(date, service = '', user = '', api=API.ANALYTICS_LOGS) {
   return async (dispatch, getState) => {
     dispatch(hideSpinner(false));
     const stateLogs = getState().logs;
@@ -96,11 +97,11 @@ export function getNextPageLogs(date, service = '', user = '') {
       ? stateLogs[stateLogs.length - 1]['log_id']
       : 0;
 
-    await get(date, service, user, false, logId, dispatch);
+    await get(date, service, user, false, logId, dispatch, false, api);
   };
 }
 
-export function getPrevPageLogs(date, service = '', user = '') {
+export function getPrevPageLogs(date, service = '', user = '', api=API.ANALYTICS_LOGS) {
   return async (dispatch, getState) => {
     dispatch(hideSpinner(false));
     const stateLogs = getState().logs;
@@ -110,7 +111,7 @@ export function getPrevPageLogs(date, service = '', user = '') {
 
     const ajax = Ajax.instance();
     try {
-      const response = await ajax.get('/dhis-integration/api/logs', {
+      const response = await ajax.get(api, {
         date, service, user, getAbove: true, logId, onLoad: false
       });
       if (response.length > 0) {

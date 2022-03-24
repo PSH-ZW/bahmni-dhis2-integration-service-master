@@ -187,6 +187,32 @@
   border: #9EC93E 1px solid;
 }
 
+.ERROR, .SUCCESS, .INFO {
+  border-radius: 15px;
+  padding: 5px 25px;
+  display: inline-block;
+  color: #FFFFFF;
+  font-size: 14px;
+  width: 120px;
+  text-align: center;
+  text-transform: capitalize
+}
+
+.ERROR {
+  background-color: #FB7777;
+  border: #FB7777 1px solid;
+}
+
+.INFO {
+  background-color: #3ec4c9;
+  border: #3ec4c9 1px solid;
+}
+
+.SUCCESS {
+  background-color: #9EC93E;
+  border: #9EC93E 1px solid;
+}
+
 .pending {
   background-color: #F5A623;
   border: #F5A623 1px solid;

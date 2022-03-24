@@ -43,22 +43,22 @@ class App extends Component {
           )}
           {this.props.session.privileges.includes(privileges.UPLOAD) && (
           <Link
-            to="/dhis-integration/sync"
+            to="/dhis-integration/analyticslogs"
             className="sync-link"
             onClick={() => this.logEvent(auditLogEventDetails.OPEN_SYNC_TO_DHIS)}
           >
-            <i className="fa fa-upload" />
-            Sync to DHIS
+            <i className="fa fa-file-text" />
+            Analytics Logs
           </Link>
           )}
           {this.props.session.privileges.includes(privileges.LOG) && (
           <Link
-            to="/dhis-integration/logs"
+            to="/dhis-integration/synclogs"
             className="log-link"
             onClick={() => this.logEvent(auditLogEventDetails.OPEN_DHIS_LOG)}
           >
             <i className="fa fa-book" />
-            Logs
+            Sync Logs
           </Link>
           )}
           {this.props.session.privileges.includes(privileges.LOG) && (
