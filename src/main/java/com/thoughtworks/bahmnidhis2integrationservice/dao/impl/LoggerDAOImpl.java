@@ -111,21 +111,48 @@ public class LoggerDAOImpl {
                                                       boolean onLoad, String category, String status) {
         ZoneId zoneId = ZonedDateTime.now().getZone();
         String serverDate = getDateStringInLocalFromUtc(date, zoneId);
-        String sql = String.format(getAnalyticsSql(getAbove, onLoad), serverDate, service, logId, category, status);
-
+        String sql;
+        if(!status.isEmpty()) {
+            sql = String.format(getAnalyticsSql(getAbove, onLoad, false), serverDate, service, logId, category, status);
+        }else{
+            sql = String.format(getAnalyticsSql(getAbove, onLoad, true), serverDate, service, logId, category);
+        }
         List<Map<String, Object>> logs = jdbcTemplate.queryForList(sql);
         changeDateToUtc(logs, zoneId);
         return logs;
     }
 
-    private String getAnalyticsSql(boolean getAbove, boolean onLoad) {
+    private String getAnalyticsSql(boolean getAbove, boolean onLoad, boolean defaultCase) {
         if (onLoad) {
+            if(defaultCase) return getOnLoadPageAnalyticsSqlDefault();
             return getOnLoadPageAnalyticsSql();
         }
         if (getAbove) {
+            if(defaultCase) return getPrevPageAnalyticsSqlDefault();
             return getPrevPageAnalyticsSql();
         }
+        if(defaultCase) return getNextPageAnalyticsSqlDefault();
         return getNextPageAnalyticsSql();
+    }
+
+    private String getNextPageAnalyticsSqlDefault() {
+        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created \n" +
+                "FROM log \n" +
+                "WHERE date_created >= '%s' \n" +
+                "AND upper(program) LIKE upper('%%%s%%')\n" +
+                "AND log_id < %s\n" +
+                "AND category = '%s' \n" +
+                "ORDER BY log_id DESC LIMIT 10;";
+    }
+
+    private String getPrevPageAnalyticsSqlDefault() {
+        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created \n" +
+                "FROM log \n" +
+                "WHERE date_created >= '%s' \n" +
+                "AND upper(program) LIKE upper('%%%s%%')\n" +
+                "AND log_id > %s\n" +
+                "AND category = '%s' \n" +
+                "ORDER BY log_id ASC LIMIT 10;";
     }
 
     private String getNextPageAnalyticsSql() {
@@ -158,6 +185,15 @@ public class LoggerDAOImpl {
                 "AND log_id > %s\n" +
                 "AND category = '%s' \n" +
                 "AND status = '%s' \n" +
+                "ORDER BY log_id DESC LIMIT 10;";
+    }
+    private String getOnLoadPageAnalyticsSqlDefault() {
+        return "SELECT log_id, program, comments, status, status_info, date_created \n" +
+                "FROM log \n" +
+                "WHERE date_created >= '%s' \n" +
+                "AND upper(program) LIKE upper('%%%s%%')\n" +
+                "AND log_id > %s\n" +
+                "AND category = '%s' \n" +
                 "ORDER BY log_id DESC LIMIT 10;";
     }
 }
