@@ -18,7 +18,7 @@ public class LoggerController {
     @Autowired
     private LoggerServiceImpl loggerService;
 
-    @GetMapping(value = "/logs")
+    @GetMapping(value = "/syncLogs")
     @ResponseBody
     public List<Map<String, Object>> getLogs(@RequestParam String date,
                                              @RequestParam String user,
@@ -26,7 +26,7 @@ public class LoggerController {
                                              @RequestParam boolean getAbove,
                                              @RequestParam int logId,
                                              @RequestParam boolean onLoad,
-                                             @RequestParam String category){
+                                             @RequestParam(defaultValue = "dhis-sync") String category){
         return loggerService.getLogs(date, user, service, getAbove, logId, onLoad, category);
     }
 
