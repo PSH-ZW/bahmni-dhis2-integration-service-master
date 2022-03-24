@@ -25,8 +25,7 @@ public class LoggerServiceImpl {
         return loggerDAO.getLatestSyncStatus(mappingName);
     }
 
-//    public List<Map<String, Object>> getAnalyticsLogs(String date, String user, String service, boolean getAbove,
-//                                                      int logId, boolean onLoad, String category) {
-//        return loggerDAO.getAnalyticsLogs(date, user, getAbove, logId, onLoad, category);
-//    }
+    public List<Map<String, Object>> getAnalyticsLogs(String date, String service, boolean getAbove, int logId, boolean onLoad, String category) {
+        return loggerDAO.getAnalyticsLogs(date, service, getAbove, logId, onLoad, category);
+    }
 }

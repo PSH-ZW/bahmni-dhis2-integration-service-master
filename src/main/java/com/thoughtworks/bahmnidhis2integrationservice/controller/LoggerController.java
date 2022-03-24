@@ -29,4 +29,15 @@ public class LoggerController {
                                              @RequestParam String category){
         return loggerService.getLogs(date, user, service, getAbove, logId, onLoad, category);
     }
+
+    @GetMapping(value = "/analyticsLogs")
+    @ResponseBody
+    public List<Map<String, Object>> getLogs(@RequestParam String date,
+                                             @RequestParam String service,
+                                             @RequestParam boolean getAbove,
+                                             @RequestParam int logId,
+                                             @RequestParam boolean onLoad,
+                                             @RequestParam(defaultValue = "analytics") String category){
+        return loggerService.getAnalyticsLogs(date, service, getAbove, logId, onLoad, category);
+    }
 }

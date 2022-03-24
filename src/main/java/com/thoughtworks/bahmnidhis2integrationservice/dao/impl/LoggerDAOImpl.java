@@ -81,7 +81,7 @@ public class LoggerDAOImpl {
                 "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
                 "AND upper(program) LIKE upper('%%%s%%')\n" +
                 "AND log_id > %s\n" +
-                "AND category = %s\n" +
+                "AND category = %s \n" +
                 "ORDER BY log_id ASC LIMIT 10;";
     }
 
@@ -92,7 +92,7 @@ public class LoggerDAOImpl {
                 "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
                 "AND upper(program) LIKE upper('%%%s%%')\n" +
                 "AND log_id < %s\n" +
-                "AND category = %s\n" +
+                "AND category = %s \n" +
                 "ORDER BY log_id DESC LIMIT 10;";
     }
 
@@ -103,8 +103,57 @@ public class LoggerDAOImpl {
                 "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
                 "AND upper(program) LIKE upper('%%%s%%')\n" +
                 "AND log_id > %s\n" +
-                "AND category = %s\n" +
+                "AND category = %s \n" +
                 "ORDER BY log_id DESC LIMIT 10;";
     }
 
+    public List<Map<String, Object>> getAnalyticsLogs(String date, String service, boolean getAbove, int logId, boolean onLoad, String category) {
+        ZoneId zoneId = ZonedDateTime.now().getZone();
+        String serverDate = getDateStringInLocalFromUtc(date, zoneId);
+        String sql = String.format(getAnalyticsSql(getAbove, onLoad), serverDate, service, logId, category);
+
+        List<Map<String, Object>> logs = jdbcTemplate.queryForList(sql);
+        changeDateToUtc(logs, zoneId);
+        return logs;
+    }
+
+    private String getAnalyticsSql(boolean getAbove, boolean onLoad) {
+        if (onLoad) {
+            return getOnLoadPageAnalyticsSql();
+        }
+        if (getAbove) {
+            return getPrevPageAnalyticsSql();
+        }
+        return getNextPageAnalyticsSql();
+    }
+
+    private String getNextPageAnalyticsSql() {
+        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created \n" +
+                "FROM log \n" +
+                "WHERE date_created >= '%s' \n" +
+                "AND upper(program) LIKE upper('%%%s%%')\n" +
+                "AND log_id < %s\n" +
+                "AND category = '%s' \n" +
+                "ORDER BY log_id DESC LIMIT 10;";
+    }
+
+    private String getPrevPageAnalyticsSql() {
+        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created \n" +
+                "FROM log \n" +
+                "WHERE date_created >= '%s' \n" +
+                "AND upper(program) LIKE upper('%%%s%%')\n" +
+                "AND log_id > %s\n" +
+                "AND category = '%s' \n" +
+                "ORDER BY log_id ASC LIMIT 10;";
+    }
+
+    private String getOnLoadPageAnalyticsSql() {
+        return "SELECT log_id, program, comments, status, status_info, date_created \n" +
+                "FROM log \n" +
+                "WHERE date_created >= '%s' \n" +
+                "AND upper(program) LIKE upper('%%%s%%')\n" +
+                "AND log_id > %s\n" +
+                "AND category = '%s' \n" +
+                "ORDER BY log_id DESC LIMIT 10;";
+    }
 }
