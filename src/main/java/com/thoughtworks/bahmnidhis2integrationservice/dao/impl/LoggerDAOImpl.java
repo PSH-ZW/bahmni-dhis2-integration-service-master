@@ -81,7 +81,7 @@ public class LoggerDAOImpl {
                 "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
                 "AND upper(program) LIKE upper('%%%s%%')\n" +
                 "AND log_id > %s\n" +
-                "AND category = %s \n" +
+                "AND category = '%s' \n" +
                 "ORDER BY log_id ASC LIMIT 10;";
     }
 
@@ -92,7 +92,7 @@ public class LoggerDAOImpl {
                 "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
                 "AND upper(program) LIKE upper('%%%s%%')\n" +
                 "AND log_id < %s\n" +
-                "AND category = %s \n" +
+                "AND category = '%s' \n" +
                 "ORDER BY log_id DESC LIMIT 10;";
     }
 
@@ -103,7 +103,7 @@ public class LoggerDAOImpl {
                 "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
                 "AND upper(program) LIKE upper('%%%s%%')\n" +
                 "AND log_id > %s\n" +
-                "AND category = %s \n" +
+                "AND category = '%s' \n" +
                 "ORDER BY log_id DESC LIMIT 10;";
     }
 
