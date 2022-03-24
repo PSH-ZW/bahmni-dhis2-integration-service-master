@@ -107,10 +107,11 @@ public class LoggerDAOImpl {
                 "ORDER BY log_id DESC LIMIT 10;";
     }
 
-    public List<Map<String, Object>> getAnalyticsLogs(String date, String service, boolean getAbove, int logId, boolean onLoad, String category) {
+    public List<Map<String, Object>> getAnalyticsLogs(String date, String service, boolean getAbove, int logId,
+                                                      boolean onLoad, String category, String status) {
         ZoneId zoneId = ZonedDateTime.now().getZone();
         String serverDate = getDateStringInLocalFromUtc(date, zoneId);
-        String sql = String.format(getAnalyticsSql(getAbove, onLoad), serverDate, service, logId, category);
+        String sql = String.format(getAnalyticsSql(getAbove, onLoad), serverDate, service, logId, category, status);
 
         List<Map<String, Object>> logs = jdbcTemplate.queryForList(sql);
         changeDateToUtc(logs, zoneId);
@@ -134,6 +135,7 @@ public class LoggerDAOImpl {
                 "AND upper(program) LIKE upper('%%%s%%')\n" +
                 "AND log_id < %s\n" +
                 "AND category = '%s' \n" +
+                "AND status = '%s' \n" +
                 "ORDER BY log_id DESC LIMIT 10;";
     }
 
@@ -144,6 +146,7 @@ public class LoggerDAOImpl {
                 "AND upper(program) LIKE upper('%%%s%%')\n" +
                 "AND log_id > %s\n" +
                 "AND category = '%s' \n" +
+                "AND status = '%s' \n" +
                 "ORDER BY log_id ASC LIMIT 10;";
     }
 
@@ -154,6 +157,7 @@ public class LoggerDAOImpl {
                 "AND upper(program) LIKE upper('%%%s%%')\n" +
                 "AND log_id > %s\n" +
                 "AND category = '%s' \n" +
+                "AND status = '%s' \n" +
                 "ORDER BY log_id DESC LIMIT 10;";
     }
 }

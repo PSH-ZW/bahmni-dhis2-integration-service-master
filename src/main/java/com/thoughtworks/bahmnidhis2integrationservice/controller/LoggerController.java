@@ -37,7 +37,8 @@ public class LoggerController {
                                              @RequestParam boolean getAbove,
                                              @RequestParam int logId,
                                              @RequestParam boolean onLoad,
+                                             @RequestParam String status,
                                              @RequestParam(defaultValue = "analytics") String category){
-        return loggerService.getAnalyticsLogs(date, service, getAbove, logId, onLoad, category);
+        return loggerService.getAnalyticsLogs(date, service, getAbove, logId, onLoad, category, status);
     }
 }
