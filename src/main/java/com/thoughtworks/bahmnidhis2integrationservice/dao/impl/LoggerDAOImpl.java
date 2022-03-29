@@ -23,12 +23,14 @@ public class LoggerDAOImpl {
     private static final String DATE_CREATED = "date_created";
     private static final String SUCCESS = "success";
     private static final String EMPTY_STATUS = "";
+    private static final String CATEGORY_SYNC_LOGS = "dhis-sync";
+    private static final String CATEGORY_ANALYTICS = "analytics";
 
 
-    public List<Map<String, Object>> getLogs(String date, String user, String service, boolean getAbove, int logId, boolean onLoad, String category) {
+    public List<Map<String, Object>> getLogs(String date, String user, String service, boolean getAbove, int logId, boolean onLoad) {
         ZoneId zoneId = ZonedDateTime.now().getZone();
         String serverDate = getDateStringInLocalFromUtc(date, zoneId);
-        String sql = String.format(getSql(getAbove, onLoad), serverDate, user, service, logId, category);
+        String sql = String.format(getSql(getAbove, onLoad), serverDate, user, service, logId, CATEGORY_SYNC_LOGS);
 
         List<Map<String, Object>> logs = jdbcTemplate.queryForList(sql);
         changeDateToUtc(logs, zoneId);
@@ -108,14 +110,16 @@ public class LoggerDAOImpl {
     }
 
     public List<Map<String, Object>> getAnalyticsLogs(String date, String service, boolean getAbove, int logId,
-                                                      boolean onLoad, String category, String status) {
+                                                      boolean onLoad, String status) {
         ZoneId zoneId = ZonedDateTime.now().getZone();
         String serverDate = getDateStringInLocalFromUtc(date, zoneId);
         String sql;
         if(!status.isEmpty()) {
-            sql = String.format(getAnalyticsSql(getAbove, onLoad, false), serverDate, service, logId, category, status);
+            sql = String.format(getAnalyticsSql(getAbove, onLoad, false), serverDate, service, logId,
+                    CATEGORY_ANALYTICS, status);
         }else{
-            sql = String.format(getAnalyticsSql(getAbove, onLoad, true), serverDate, service, logId, category);
+            sql = String.format(getAnalyticsSql(getAbove, onLoad, true), serverDate, service, logId,
+                    CATEGORY_ANALYTICS);
         }
         List<Map<String, Object>> logs = jdbcTemplate.queryForList(sql);
         changeDateToUtc(logs, zoneId);
