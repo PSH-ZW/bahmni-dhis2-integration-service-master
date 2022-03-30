@@ -25,9 +25,10 @@ public class LoggerController {
                                              @RequestParam String service,
                                              @RequestParam boolean getAbove,
                                              @RequestParam int logId,
-                                             @RequestParam boolean onLoad,
-                                             @RequestParam(defaultValue = "dhis-sync") String category){
-        return loggerService.getLogs(date, user, service, getAbove, logId, onLoad, category);
+                                             @RequestParam boolean onLoad
+//                                             @RequestParam(defaultValue = "dhis-sync") String category
+    ){
+        return loggerService.getLogs(date, user, service, getAbove, logId, onLoad);
     }
 
     @GetMapping(value = "/analyticsLogs")
@@ -37,8 +38,9 @@ public class LoggerController {
                                              @RequestParam boolean getAbove,
                                              @RequestParam int logId,
                                              @RequestParam boolean onLoad,
-                                             @RequestParam(defaultValue = "") String status,
-                                             @RequestParam(defaultValue = "analytics") String category){
-        return loggerService.getAnalyticsLogs(date, service, getAbove, logId, onLoad, category, status);
+                                             @RequestParam(defaultValue = "") String status
+//                                             @RequestParam(defaultValue = "analytics") String category
+    ){
+        return loggerService.getAnalyticsLogs(date, service, getAbove, logId, onLoad, status);
     }
 }
