@@ -26,7 +26,6 @@ public class MappingServiceImplTest {
     private MappingDAOImpl mappingDAO;
 
     private String mappingName = "pat_details";
-    private String lookupTable = "{\"instance\" : \"patient\"}";
     private String mappingJson = "{\"instance\" : {\"patient_id\": \"Asj8X\", \"patient_name\": \"jghTk9\"}}";
     private String currentMapping = "";
     private String config = "{\"searchable\": [\"patient_id\", \"allergy_status\"]}";
@@ -41,25 +40,25 @@ public class MappingServiceImplTest {
     @Test
     public void shouldReturnSuccessMessageOnInsertSuccess() throws Exception {
         String expected = "Successfully Added Mapping";
-        when(mappingDAO.saveMapping(mappingName, lookupTable, mappingJson, config, currentMapping, user))
+        when(mappingDAO.saveMapping(mappingName, mappingJson, config, currentMapping, user))
                 .thenReturn(expected);
 
-        String actual = mappingService.saveMapping(mappingName, lookupTable, mappingJson, config, currentMapping, user);
+        String actual = mappingService.saveMapping(mappingName, mappingJson, config, currentMapping, user);
 
-        verify(mappingDAO, times(1)).saveMapping(mappingName, lookupTable, mappingJson, config, currentMapping, user);
+        verify(mappingDAO, times(1)).saveMapping(mappingName, mappingJson, config, currentMapping, user);
         assertEquals(expected, actual);
     }
 
     @Test
     public void shouldThrowErrorOnFail() throws Exception {
         String expected = "Could not able to insert";
-        when(mappingDAO.saveMapping(mappingName, lookupTable, mappingJson, config, currentMapping, user))
+        when(mappingDAO.saveMapping(mappingName, mappingJson, config, currentMapping, user))
                 .thenThrow(new Exception(expected));
 
         try {
-            mappingService.saveMapping(mappingName, lookupTable, mappingJson, config, currentMapping, user);
+            mappingService.saveMapping(mappingName, mappingJson, config, currentMapping, user);
         } catch (Exception e) {
-            verify(mappingDAO, times(1)).saveMapping(mappingName, lookupTable, mappingJson, config, currentMapping, user);
+            verify(mappingDAO, times(1)).saveMapping(mappingName, mappingJson, config, currentMapping, user);
             assertEquals(expected, e.getMessage());
         }
     }
@@ -79,7 +78,6 @@ public class MappingServiceImplTest {
         Map<String, Object> HTSMapping = new HashMap<>();
 
         HTSMapping.put("mapping_name","HTS Service");
-        HTSMapping.put("lookup_table","{\"instance\" : \"patient\"}");
         HTSMapping.put("mapping_json","{\"instance\" : {\"patient_id\": \"Asj8X\", \"patient_name\": \"jghTk9\"}}");
 
         when(mappingDAO.getMapping("HTS Service")).thenReturn(HTSMapping);
@@ -107,7 +105,7 @@ public class MappingServiceImplTest {
     @Test
     public void shouldReturnSuccessMessageOnSuccessImportOfMappings() throws Exception {
         String expected = "Successfully Added Mapping";
-        Mapping mapping = new Mapping("insert mapping", "", lookupTable, mappingJson, config, "superman");
+        Mapping mapping = new Mapping("insert mapping", "", mappingJson, config, "superman");
 
         List<Mapping> mappings = Collections.singletonList(mapping);
 
@@ -122,7 +120,7 @@ public class MappingServiceImplTest {
     @Test
     public void shouldThrowErrorOnMappingImportFail() throws Exception {
         String expected = "Could not able to insert";
-        Mapping mapping = new Mapping("insert mapping", "", lookupTable, mappingJson, config, "superman");
+        Mapping mapping = new Mapping("insert mapping", "", mappingJson, config, "superman");
 
         List<Mapping> mappings = Collections.singletonList(mapping);
         when(mappingDAO.saveMapping(mappings)).thenThrow(new Exception(expected));
@@ -139,12 +137,10 @@ public class MappingServiceImplTest {
     public void shouldGetAllTheExistingMappings() throws NoMappingFoundException {
         Map<String, Object> htsMapping = new HashMap<>();
         htsMapping.put("mappingName", "HTS Service");
-        htsMapping.put("lookupTable", "{\"instance\" : \"patient\"}");
         htsMapping.put("mappingJson", "{\"patient_id\": \"Asj8X\", \"patient_name\": \"jghTk9\"}");
 
         Map<String, Object> tbMapping = new HashMap<>();
         tbMapping.put("mappingName", "TB Service");
-        tbMapping.put("lookupTable", "{\"instance\" : \"patient\"}");
         tbMapping.put("mappingJson", "{\"patient_id\": \"Asj8X\", \"patient_name\": \"jghTk9\"}");
 
         List<Map<String, Object>>  expected = new ArrayList<>();

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface MappingService {
-    String saveMapping(String mappingName, String lookupTable, String mappingJson, String config, String currentMapping, String user) throws Exception;
+    String saveMapping(String mappingName, String mappingJson, String config, String currentMapping, String user) throws Exception;
 
     List<String> getMappingNames();
 

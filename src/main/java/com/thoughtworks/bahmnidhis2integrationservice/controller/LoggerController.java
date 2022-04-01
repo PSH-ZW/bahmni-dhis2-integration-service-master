@@ -25,9 +25,7 @@ public class LoggerController {
                                              @RequestParam String service,
                                              @RequestParam boolean getAbove,
                                              @RequestParam int logId,
-                                             @RequestParam boolean onLoad
-//                                             @RequestParam(defaultValue = "dhis-sync") String category
-    ){
+                                             @RequestParam boolean onLoad){
         return loggerService.getLogs(date, user, service, getAbove, logId, onLoad);
     }
 
@@ -38,9 +36,7 @@ public class LoggerController {
                                              @RequestParam boolean getAbove,
                                              @RequestParam int logId,
                                              @RequestParam boolean onLoad,
-                                             @RequestParam(defaultValue = "") String status
-//                                             @RequestParam(defaultValue = "analytics") String category
-    ){
+                                             @RequestParam(defaultValue = "") String status){
         return loggerService.getAnalyticsLogs(date, service, getAbove, logId, onLoad, status);
     }
 }

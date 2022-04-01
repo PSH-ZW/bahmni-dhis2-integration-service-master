@@ -126,8 +126,8 @@ public class MarkerDAOImplTest {
         Map<String, Object> entriesCount = new HashMap<>();
         entriesCount.put("count", 3);
 
-        Mapping mapping1 = new Mapping(insertMapping, "", "", "", "", "superman");
-        Mapping mapping2 = new Mapping(updateMapping, updateMapping, "", "", "", "superman");
+        Mapping mapping1 = new Mapping(insertMapping, "", "", "", "superman");
+        Mapping mapping2 = new Mapping(updateMapping, updateMapping, "", "", "superman");
         List<Mapping> mappings = Arrays.asList(mapping1, mapping2);
 
         StringBuilder insertSql = new StringBuilder();

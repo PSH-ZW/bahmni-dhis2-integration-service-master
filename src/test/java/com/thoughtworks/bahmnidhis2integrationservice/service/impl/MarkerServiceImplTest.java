@@ -44,8 +44,8 @@ public class MarkerServiceImplTest {
 
     @Test
     public void shouldMakeACallToMarkerDAOToCreateEntriesForImportedMappings() {
-        Mapping mapping1 = new Mapping("insert mapping", "", "", "", "", "superman");
-        Mapping mapping2 = new Mapping("update mapping", "update mapping", "", "", "", "superman");
+        Mapping mapping1 = new Mapping("insert mapping", "", "", "", "superman");
+        Mapping mapping2 = new Mapping("update mapping", "update mapping", "", "", "superman");
         List<Mapping> mappings = Arrays.asList(mapping1,  mapping2);
 
         doNothing().when(markerDAO).createMarkerEntries(mappings);

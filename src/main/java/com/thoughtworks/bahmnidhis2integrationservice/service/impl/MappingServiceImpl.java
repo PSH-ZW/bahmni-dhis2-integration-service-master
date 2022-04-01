@@ -21,8 +21,8 @@ public class MappingServiceImpl implements MappingService {
     private SyncRepository syncRepository;
 
     @Override
-    public String saveMapping(String mappingName, String lookupTable, String mappingJson, String config, String currentMapping, String user) throws Exception {
-        return mappingDAO.saveMapping(mappingName, lookupTable, mappingJson, config, currentMapping, user);
+    public String saveMapping(String mappingName, String mappingJson, String config, String currentMapping, String user) throws Exception {
+        return mappingDAO.saveMapping(mappingName, mappingJson, config, currentMapping, user);
     }
 
     @Override

@@ -27,8 +27,8 @@ public class MappingDAOImpl implements MappingDAO {
     private final static int SUCCESS = 1;
 
     @Override
-    public String saveMapping(String mappingName, String lookupTable, String mappingJson, String config, String currentMapping, String user) throws Exception {
-        int result = jdbcTemplate.update(getMappingSql(mappingName, lookupTable, mappingJson, config, currentMapping, user));
+    public String saveMapping(String mappingName, String mappingJson, String config, String currentMapping, String user) throws Exception {
+        int result = jdbcTemplate.update(getMappingSql(mappingName, mappingJson, config, currentMapping, user));
 
         if (result == SUCCESS) {
             return "Successfully Saved Mapping";
@@ -46,7 +46,7 @@ public class MappingDAOImpl implements MappingDAO {
 
     @Override
     public Map<String, Object> getMapping(String programName) throws NoMappingFoundException {
-        String sql = String.format("SELECT program_name, lookup_table, mapping_json, config FROM mapping WHERE program_name= '%s'", programName);
+        String sql = String.format("SELECT program_name, mapping_json, config FROM mapping WHERE program_name= '%s'", programName);
         try {
             return jdbcTemplate.queryForMap(sql);
         } catch (EmptyResultDataAccessException e) {
@@ -61,7 +61,6 @@ public class MappingDAOImpl implements MappingDAO {
         mappingsList.forEach(mapping -> {
             String query = getMappingSql(
                     mapping.getProgram_name(),
-                    mapping.getLookup_table(),
                     mapping.getMapping_json(),
                     mapping.getConfig(),
                     mapping.getCurrent_mapping(),
@@ -82,7 +81,7 @@ public class MappingDAOImpl implements MappingDAO {
 
     @Override
     public List<Map<String, Object>> getAllMappings() throws NoMappingFoundException {
-        String sql = "SELECT program_name, lookup_table, mapping_json, config FROM mapping;";
+        String sql = "SELECT program_name, mapping_json, config FROM mapping;";
         try {
             return jdbcTemplate.queryForList(sql);
         } catch (EmptyResultDataAccessException e) {
@@ -90,15 +89,15 @@ public class MappingDAOImpl implements MappingDAO {
         }
     }
 
-    private String getMappingSql(String mappingName, String lookupTable, String mappingJson, String config, String currentMapping, String user) {
+    private String getMappingSql(String mappingName, String mappingJson, String config, String currentMapping, String user) {
         String currentTime = getCurrentTime();
         mappingJson = mappingJson.replace("'", "''"); //replace ' with '' . otherwise postgres will throw error for dhis elements names like "user's id" etc.
         return StringUtils.isEmpty(currentMapping) ?
-                String.format("INSERT INTO mapping (program_name, lookup_table, mapping_json, config, created_by, date_created) " +
-                        "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');", mappingName, lookupTable, mappingJson, config, user, currentTime)
+                String.format("INSERT INTO mapping (program_name, mapping_json, config, created_by, date_created) " +
+                        "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');", mappingName, mappingJson, config, user, currentTime)
                 : String.format("UPDATE mapping " +
-                "SET program_name='%s', lookup_table='%s', mapping_json='%s', config='%s', modified_by='%s', date_modified='%s' " +
-                "WHERE program_name='%s';", mappingName, lookupTable, mappingJson, config, user, currentTime, currentMapping);
+                "SET program_name='%s', mapping_json='%s', config='%s', modified_by='%s', date_modified='%s' " +
+                "WHERE program_name='%s';", mappingName, mappingJson, config, user, currentTime, currentMapping);
     }
 
     private String getCurrentTime() {

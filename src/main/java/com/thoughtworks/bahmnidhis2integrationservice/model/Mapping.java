@@ -8,7 +8,6 @@ import lombok.Data;
 public class Mapping {
     private String program_name;
     private String current_mapping;
-    private String lookup_table;
     private String mapping_json;
     private String config;
     private String user;

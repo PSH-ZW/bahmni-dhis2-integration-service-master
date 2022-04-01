@@ -37,7 +37,6 @@ public class MappingControllerTest {
     private LoggerServiceImpl logService;
 
     private String mappingName = "patient_details";
-    private String lookupTable = "patient";
     private String mappingJson = "{'patient_id': 'Asj8X', 'patient_name': 'jghTk9'}";
     private String currentMapping = "pat_details";
     private String config = "{\"searchable\": [\"patient_id\", \"allergy_status\"]}";
@@ -53,7 +52,6 @@ public class MappingControllerTest {
         setValuesForMemberFields(mappingController, "logService", logService);
 
         params.put("mappingName", mappingName);
-        params.put("lookupTable", lookupTable);
         params.put("mappingJson", mappingJson);
         params.put("currentMapping", currentMapping);
         params.put("config", config);
@@ -64,14 +62,14 @@ public class MappingControllerTest {
     public void shouldSaveMappings() throws Exception {
         String expected = "Successfully Added Mapping";
 
-        when(mappingService.saveMapping(mappingName, lookupTable, mappingJson, config, currentMapping, user)).thenReturn(expected);
+        when(mappingService.saveMapping(mappingName, mappingJson, config, currentMapping, user)).thenReturn(expected);
 
         doNothing().when(markerService).createEntriesForNewService(currentMapping, mappingName);
 
         Map<String, String> actual = mappingController.saveMappings(params);
 
         verify(mappingService, times(1))
-                .saveMapping(mappingName, lookupTable, mappingJson, config, currentMapping, user);
+                .saveMapping(mappingName, mappingJson, config, currentMapping, user);
         verify(markerService, times(1)).createEntriesForNewService(currentMapping, mappingName);
 
         assertEquals(expected, actual.get("data"));
@@ -81,14 +79,14 @@ public class MappingControllerTest {
     public void shouldThrowErrorOnFail() throws Exception {
         String expected = "Could not able to add Mapping";
 
-        when(mappingService.saveMapping(mappingName, lookupTable, mappingJson, config, currentMapping, user))
+        when(mappingService.saveMapping(mappingName, mappingJson, config, currentMapping, user))
                 .thenThrow(new Exception(expected));
 
         try {
             mappingController.saveMappings(params);
         } catch (Exception e) {
             verify(mappingService, times(1))
-                    .saveMapping(mappingName, lookupTable, mappingJson, config, currentMapping, user);
+                    .saveMapping(mappingName, mappingJson, config, currentMapping, user);
             assertEquals(expected, e.getMessage());
         }
     }
@@ -126,7 +124,6 @@ public class MappingControllerTest {
         Map<String, Object> HTSMapping = new HashMap<>();
 
         HTSMapping.put("mapping_name", "HTS Service");
-        HTSMapping.put("lookup_table", "{\"instance\" : \"patient\"}");
         HTSMapping.put("mapping_json", "{\"instance\" : {\"patient_id\": \"Asj8X\", \"patient_name\": \"jghTk9\"}}");
 
         when(mappingService.getMapping("HTS Service")).thenReturn(HTSMapping);
@@ -154,11 +151,6 @@ public class MappingControllerTest {
     @Test
     public void shouldImportAllMappingsSuccessfully() throws Exception {
         String expected = "Successfully Imported Mapping(s)";
-        String lookupTable = "{" +
-                    "\"instance\":\"hts_instance_table\"," +
-                    "\"enrollments\":\"hts_program_enrollment_table\"," +
-                    "\"event\":\"hts_program_events_table\"" +
-                "}";
         String mappingJson = "{" +
                     "\"instance\":" +
                         "{" +
@@ -177,12 +169,6 @@ public class MappingControllerTest {
                 "}";
         String mapping = "{" +
                     "\"mapping_name\":\"test2\"," +
-                    "\"lookup_table\":" +
-                        "\"{" +
-                            "\\\"instance\\\":\\\"hts_instance_table\\\"," +
-                            "\\\"enrollments\\\":\\\"hts_program_enrollment_table\\\"," +
-                            "\\\"event\\\":\\\"hts_program_events_table\\\"" +
-                        "}\"," +
                     "\"mapping_json\":" +
                         "\"{" +
                             "\\\"instance\\\":" +
@@ -206,7 +192,7 @@ public class MappingControllerTest {
 
         List<Object> mappings = Collections.singletonList(mapping);
 
-        Mapping mappingObj = new Mapping("test2", null, lookupTable, mappingJson, config, "superman");
+        Mapping mappingObj = new Mapping("test2", null, mappingJson, config, "superman");
         List<Mapping> mappingsObj = Collections.singletonList(mappingObj);
 
         when(mappingService.saveMapping(mappingsObj)).thenReturn(expected);
@@ -223,11 +209,6 @@ public class MappingControllerTest {
     @Test
     public void shouldThrowErrorWhenImportFails() throws Exception {
         String expected = "Could not able to add Mapping";
-        String lookupTable = "{" +
-                    "\"instance\":\"hts_instance_table\"," +
-                    "\"enrollments\":\"hts_program_enrollment_table\"," +
-                    "\"event\":\"hts_program_events_table\"" +
-                "}";
         String mappingJson = "{" +
                     "\"instance\":" +
                         "{" +
@@ -243,12 +224,6 @@ public class MappingControllerTest {
 
         String mapping = "{" +
                     "\"mapping_name\":\"test2\"," +
-                    "\"lookup_table\":" +
-                        "\"{" +
-                            "\\\"instance\\\":\\\"hts_instance_table\\\"," +
-                            "\\\"enrollments\\\":\\\"hts_program_enrollment_table\\\"," +
-                            "\\\"event\\\":\\\"hts_program_events_table\\\"" +
-                        "}\"," +
                     "\"mapping_json\":" +
                         "\"{" +
                             "\\\"instance\\\":" +
@@ -272,7 +247,7 @@ public class MappingControllerTest {
 
         List<Object> mappings = Collections.singletonList(mapping);
 
-        Mapping mappingObj = new Mapping("test2", "", lookupTable, mappingJson, config, "superman");
+        Mapping mappingObj = new Mapping("test2", "", mappingJson, config, "superman");
         List<Mapping> mappingsObj = Collections.singletonList(mappingObj);
 
         when(mappingService.saveMapping(mappingsObj))
@@ -290,12 +265,10 @@ public class MappingControllerTest {
     public void shouldReturnAllTheDetailedMappings() throws NoMappingFoundException {
         Map<String, Object> htsMapping = new HashMap<>();
         htsMapping.put("mappingName", "HTS Service");
-        htsMapping.put("lookupTable", "{\"instance\" : \"patient\"}");
         htsMapping.put("mappingJson", "{\"patient_id\": \"Asj8X\", \"patient_name\": \"jghTk9\"}");
 
         Map<String, Object> tbMapping = new HashMap<>();
         tbMapping.put("mappingName", "TB Service");
-        tbMapping.put("lookupTable", "{\"instance\" : \"patient\"}");
         tbMapping.put("mappingJson", "{\"patient_id\": \"Asj8X\", \"patient_name\": \"jghTk9\"}");
 
         List<Map<String, Object>>  expected = new ArrayList<>();
