@@ -60,7 +60,8 @@ class LogFilters extends React.Component {
     if(this.state.analytics){
       status = this.refs.status.value;
     } else {
-      user = this.refs.user.value;
+      status = this.refs.status.value;
+      // user = this.refs.user.value;
     }
     const formattedTime = `${this.state.time.getUTCHours()}:${this.state.time.getUTCMinutes()}:${this.state.time.getUTCSeconds()}`;
     const formattedDate = `${this.state.date.getFullYear()}-${this.state.date.getUTCMonth() + 1}-${this.state.date.getUTCDate()}`;
@@ -145,9 +146,14 @@ class LogFilters extends React.Component {
         { !this.state.analytics && (
             <React.Fragment>
               <span className="filter-on">
-                Username
+                Status
               </span>
-              <input className="filter-input" ref="user" />
+              <select name="status" id="status" className="filter-input" ref="status">
+                <option selected value=""></option>
+                <option value="success">Success</option>
+                <option value="failed">Failed</option>
+                <option value="pending">Pending</option>
+              </select>
             </React.Fragment>
           )
         }
