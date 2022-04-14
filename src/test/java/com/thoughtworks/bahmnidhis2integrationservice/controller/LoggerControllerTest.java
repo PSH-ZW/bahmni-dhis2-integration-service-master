@@ -46,11 +46,11 @@ public class LoggerControllerTest {
         expRow2.put("program_name", "HT Service");
         List<Map<String, Object>> expResults = Arrays.asList(expRow1, expRow2);
 
-        when(loggerService.getLogs(date, "", "", true, 0, onLoad)).thenReturn(expResults);
+        when(loggerService.getLogs(date, "", "", true, 0, onLoad, "")).thenReturn(expResults);
 
-        List<Map<String, Object>> actualResults = loggerController.getLogs(date, "", "", true, 0, onLoad);
+        List<Map<String, Object>> actualResults = loggerController.getLogs(date, "", "", true, 0, onLoad, "");
 
-        verify(loggerService, times(1)).getLogs(date, "", "", true, 0, onLoad);
+        verify(loggerService, times(1)).getLogs(date, "", "", true, 0, onLoad, "");
 
         assertEquals(expResults, actualResults);
     }

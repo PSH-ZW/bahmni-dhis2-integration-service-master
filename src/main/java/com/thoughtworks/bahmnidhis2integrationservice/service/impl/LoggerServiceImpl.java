@@ -13,8 +13,8 @@ public class LoggerServiceImpl {
     @Autowired
     private LoggerDAOImpl loggerDAO;
 
-    public List<Map<String, Object>> getLogs(String date, String user, String service, boolean getAbove, int logId, boolean onLoad) {
-        return loggerDAO.getLogs(date, user, service, getAbove, logId, onLoad);
+    public List<Map<String, Object>> getLogs(String date, String user, String service, boolean getAbove, int logId, boolean onLoad, String status) {
+        return loggerDAO.getLogs(date, user, service, getAbove, logId, onLoad, status);
     }
 
     public String getSyncDateForService(String mappingName) {

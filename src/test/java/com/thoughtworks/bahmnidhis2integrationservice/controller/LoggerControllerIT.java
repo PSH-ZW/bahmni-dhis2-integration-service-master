@@ -30,7 +30,7 @@ public class LoggerControllerIT {
     @Test
     public void shouldGetAllLogsAboveTheGivenDate() {
         String date = "2018-11-04 00:00:00.000000";
-        List<Map<String, Object>> logs = loggerController.getLogs(date, "", "", true, 0, true);
+        List<Map<String, Object>> logs = loggerController.getLogs(date, "", "", true, 0, true, "");
 
         assertEquals(1, logs.size());
         assertEquals(14, logs.get(0).get("log_id"));
@@ -46,7 +46,7 @@ public class LoggerControllerIT {
     @Test
     public void shouldGetAllLogsAboveTheGivenDateWithUserAdmin() {
         String date = "2018-10-04 00:00:00.000000";
-        List<Map<String, Object>> logs = loggerController.getLogs(date, "admin", "", true, 0, false);
+        List<Map<String, Object>> logs = loggerController.getLogs(date, "admin", "", true, 0, false, "");
         assertEquals(2, logs.size());
         assertEquals("admin", logs.get(0).get("synced_by"));
         assertEquals("admin", logs.get(1).get("synced_by"));
@@ -56,7 +56,7 @@ public class LoggerControllerIT {
     @Test
     public void shouldGetAllLogsAboveTheGivenDateWithProgramFPSServiceAndAdminUser() {
         String date = "2018-10-04 00:00:00.000000";
-        List<Map<String, Object>> logs = loggerController.getLogs(date, "admin", "FPS Service", true, 0, false);
+        List<Map<String, Object>> logs = loggerController.getLogs(date, "admin", "FPS Service", true, 0, false, "");
         assertEquals(1, logs.size());
         assertEquals("admin", logs.get(0).get("synced_by"));
         assertEquals("FPS Service", logs.get(0).get("program"));
@@ -66,7 +66,7 @@ public class LoggerControllerIT {
     @Test
     public void shouldGetAllLogsAboveTheGivenDateWithProgramFPSService() {
         String date = "2018-10-04 00:00:00.000000";
-        List<Map<String, Object>> logs = loggerController.getLogs(date, "", "FPS Service", true, 0, false);
+        List<Map<String, Object>> logs = loggerController.getLogs(date, "", "FPS Service", true, 0, false, "");
         assertEquals(2, logs.size());
         assertEquals("FPS Service", logs.get(0).get("program"));
         assertEquals("FPS Service", logs.get(1).get("program"));
@@ -76,7 +76,7 @@ public class LoggerControllerIT {
     @Test
     public void shouldGetAllLogsBelowTheGivenDate() {
         String date = "2018-10-04 00:00:00.000000";
-        List<Map<String, Object>> logs = loggerController.getLogs(date, "", "", false, 14, false);
+        List<Map<String, Object>> logs = loggerController.getLogs(date, "", "", false, 14, false, "");
         assertEquals(3, logs.size());
         assertEquals("2018-10-04 05:58:32", logs.get(0).get("date_created"));
         assertEquals("2018-10-04 05:54:32", logs.get(1).get("date_created"));
@@ -87,7 +87,7 @@ public class LoggerControllerIT {
     @Test
     public void shouldGetAllLogsAboveTheGivenDateWhenOnLoadIsFalse() {
         String date = "2018-10-04 00:00:00.000000";
-        List<Map<String, Object>> logs = loggerController.getLogs(date, "", "", true, 11, false);
+        List<Map<String, Object>> logs = loggerController.getLogs(date, "", "", true, 11, false, "");
         assertEquals(3, logs.size());
         assertEquals("2018-10-04 05:54:32", logs.get(0).get("date_created"));
         assertEquals("2018-10-04 05:58:32", logs.get(1).get("date_created"));

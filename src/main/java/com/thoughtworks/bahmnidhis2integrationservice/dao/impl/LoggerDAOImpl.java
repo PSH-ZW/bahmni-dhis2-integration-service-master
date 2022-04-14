@@ -27,11 +27,15 @@ public class LoggerDAOImpl {
     private static final String CATEGORY_ANALYTICS = "analytics";
 
 
-    public List<Map<String, Object>> getLogs(String date, String user, String service, boolean getAbove, int logId, boolean onLoad) {
+    public List<Map<String, Object>> getLogs(String date, String user, String service, boolean getAbove, int logId, boolean onLoad, String status) {
         ZoneId zoneId = ZonedDateTime.now().getZone();
         String serverDate = getDateStringInLocalFromUtc(date, zoneId);
-        String sql = String.format(getSql(getAbove, onLoad), serverDate, user, service, logId, CATEGORY_SYNC_LOGS);
-
+        String sql;
+        if(!status.isEmpty()) {
+            sql = String.format(getSql(getAbove, onLoad, false), serverDate, user, service, logId, CATEGORY_SYNC_LOGS, status);
+        }else{
+            sql = String.format(getSql(getAbove, onLoad, true), serverDate, user, service, logId, CATEGORY_SYNC_LOGS);
+        }
         List<Map<String, Object>> logs = jdbcTemplate.queryForList(sql);
         changeDateToUtc(logs, zoneId);
         return logs;
@@ -66,14 +70,53 @@ public class LoggerDAOImpl {
         });
     }
 
-    private String getSql(boolean getAbove, boolean onLoad) {
+    private String getSql(boolean getAbove, boolean onLoad, boolean defaultCase) {
         if (onLoad) {
-            return getOnLoadPageSql();
+            if(defaultCase) return getOnLoadPageSql();
+            return getOnLoadPageSqlWithStatus();
         }
         if (getAbove) {
-            return getPrevPageSql();
+            if (defaultCase) return getPrevPageSql();
+            return getPrevPageSqlWithStatus();
         }
-        return getNextPageSql();
+        if (defaultCase) return getNextPageSql();
+        return getNextPageSqlWithStatus();
+    }
+
+    private String getNextPageSqlWithStatus() {
+        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created \n" +
+                "FROM log \n" +
+                "WHERE date_created >= '%s' \n" +
+                "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
+                "AND upper(program) LIKE upper('%%%s%%')\n" +
+                "AND log_id < %s\n" +
+                "AND category = '%s' \n" +
+                "AND status = '%s' \n" +
+                "ORDER BY log_id DESC LIMIT 10;";
+    }
+
+    private String getPrevPageSqlWithStatus() {
+        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created \n" +
+                "FROM log \n" +
+                "WHERE date_created >= '%s' \n" +
+                "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
+                "AND upper(program) LIKE upper('%%%s%%')\n" +
+                "AND log_id > %s\n" +
+                "AND category = '%s' \n" +
+                "AND status = '%s' \n" +
+                "ORDER BY log_id ASC LIMIT 10;";
+    }
+
+    private String getOnLoadPageSqlWithStatus() {
+        return "SELECT log_id, program, synced_by, comments, status, status_info, date_created \n" +
+                "FROM log \n" +
+                "WHERE date_created >= '%s' \n" +
+                "AND upper(synced_by) LIKE upper('%%%s%%') \n" +
+                "AND upper(program) LIKE upper('%%%s%%')\n" +
+                "AND log_id > %s\n" +
+                "AND category = '%s' \n" +
+                "AND status = '%s' \n" +
+                "ORDER BY log_id DESC LIMIT 10;";
     }
 
     private String getPrevPageSql() {
