@@ -32,10 +32,6 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        TODO: bypassing preHandle check to run in local, remove this for production build.
-        if(true) {
-            return true;
-        }
         if (handler == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND,
                     "Application cannot handle url " + request.getRequestURI());
