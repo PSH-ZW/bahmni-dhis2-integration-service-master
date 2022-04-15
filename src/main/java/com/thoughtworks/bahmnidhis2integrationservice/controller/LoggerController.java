@@ -21,13 +21,13 @@ public class LoggerController {
     @GetMapping(value = "/syncLogs")
     @ResponseBody
     public List<Map<String, Object>> getLogs(@RequestParam String date,
-                                             @RequestParam String user,
                                              @RequestParam String service,
+                                             @RequestParam(defaultValue = "") String status,
                                              @RequestParam boolean getAbove,
                                              @RequestParam int logId,
-                                             @RequestParam boolean onLoad,
-                                             @RequestParam(defaultValue = "") String status){
-        return loggerService.getLogs(date, user, service, getAbove, logId, onLoad, status);
+                                             @RequestParam boolean onLoad)
+                                             {
+        return loggerService.getLogs(date, status, service, getAbove, logId, onLoad);
     }
 
     @GetMapping(value = "/analyticsLogs")
