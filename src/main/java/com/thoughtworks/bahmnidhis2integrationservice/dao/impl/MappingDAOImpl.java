@@ -94,7 +94,7 @@ public class MappingDAOImpl implements MappingDAO {
         mappingJson = mappingJson.replace("'", "''"); //replace ' with '' . otherwise postgres will throw error for dhis elements names like "user's id" etc.
         return StringUtils.isEmpty(currentMapping) ?
                 String.format("INSERT INTO mapping (program_name, mapping_json, config, created_by, date_created) " +
-                        "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');", mappingName, mappingJson, config, user, currentTime)
+                        "VALUES ('%s', '%s', '%s', '%s', '%s');", mappingName, mappingJson, config, user, currentTime)
                 : String.format("UPDATE mapping " +
                 "SET program_name='%s', mapping_json='%s', config='%s', modified_by='%s', date_modified='%s' " +
                 "WHERE program_name='%s';", mappingName, mappingJson, config, user, currentTime, currentMapping);
